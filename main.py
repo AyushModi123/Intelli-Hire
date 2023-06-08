@@ -1,10 +1,13 @@
 from app import app
 import threading
 import multiprocessing
-from scraper_cp import scrapeandcleanData
+from scraper_cp import scrape, data_cleaning
 from gen_grade import data_extraction
 import asyncio
+from pyppeteer import launch
+import re
 result = None
+
 def resume_print(ap):
     print('2222222')
     while ap.resume == None:
@@ -30,17 +33,32 @@ def resume_print(ap):
 def flask_app(ap):
     return ap.run_flask_app()
 
+
+
 if __name__ == '__main__':
     ap = app()
     # score = ap.run_flask_app()
+    
     thread1 = threading.Thread(target=resume_print, args=(ap,))
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(scrapeandcleanData())
-    loop.close()
-    # print(scrapeandcleanData())
     thread1.start()
+    
+    loop = asyncio.get_event_loop()
+    task = asyncio.ensure_future(scrape())
+    codingData = None
+    def callback(future):
+        global return_value
+        codingData = future.result()
+    task.add_done_callback(callback)
+    
+
     test_score = flask_app(ap)
     thread1.join()
+    
+    loop.run_until_complete(task)
+    cleaned_data = data_cleaning().clean_data(codingData)
+    print(cleaned_data)
+    
+    
     # result['Test Score'] = test_score
     # print(result)
     # print(scrapeandcleanData())
