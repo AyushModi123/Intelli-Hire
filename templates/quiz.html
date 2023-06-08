@@ -1,0 +1,115 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            margin-top: 0;
+        }
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .choice {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s;
+            cursor: pointer;
+            border-style: groove;
+        }
+        .choice:hover {
+            background-color: #f7f7f7;
+            border-color: #ccc;
+        }
+        .choice input[type="radio"] {
+            display: none;
+        }
+        .choice label {
+            margin-left: 10px;
+        }
+        .choice input[type="radio"]:checked + span {
+            font-weight: bold;
+            width: -webkit-fill-available;
+            padding: 5px;
+            background-color: #61a1ff;
+            color: #fff;
+            border-radius: 10px;
+        }
+        input[type="submit"],
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover,
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var timeLeft = 10;
+            var timer = setInterval(function() {
+                timeLeft--;
+                $('#timer').text(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    $('form').submit();
+                }
+            }, 1000);
+        });
+    </script>
+</head>
+<body>
+    <h1>Skill Test</h1>
+    <form action="/quiz" method="post">
+        {% if not session or 'start' in request.form %}
+            <input type="submit" name="start" value="Start Quiz">
+        {% else %}
+            <h3>{{ question }}</h3>
+            <div class="choices-container">
+                {% for choice in choices %}
+                    <label class="choice">
+                        <input type="radio" name="answer" id="{{ loop.index }}" value="{{ choice }}">
+                        <span>{{ choice }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            <br>
+            <p>Time left: <span id="timer">10</span></p>
+            <input type="submit" value="Next">
+        {% endif %}
+    </form>
+</body>
+</html>

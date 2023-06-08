@@ -1,3 +1,15 @@
 hackathonQA
 .env
-embeddings.npy
+embeddings.pkl
+app.py
+comp_dict.json
+Ayush_Modi_Resume_G.pdf
+data_exttarction.ipynb
+gpt4all_use.py
+JD_comparator.ipynb
+job_finder.ipynb
+resume.json
+resume1.json
+temp.py
+website_builder.ipynb
+data_extraction.ipynb
