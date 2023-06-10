@@ -7,7 +7,7 @@ import threading
 import multiprocessing
 def scraping(links):
     print('scraping')
-    while links['links'] == (None, None, None):
+    while links['fetched'] == False:
         pass
     print(links['links'])
     loop = asyncio.new_event_loop()
@@ -40,15 +40,16 @@ class app:
         manager = multiprocessing.Manager()
         links = manager.dict()
         links['links'] = (None, None, None)
-        
+        links['fetched'] = False
 
         def resume_print():
             print('resume_print')
             # print(self.resume.filename)
             de = data_extraction(self.resume.filename)
             print(de.context)
-            # links['links'] = de.links
-            links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245')
+            links['links'] = de.links
+            links['fetched'] = True
+            # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245')
             # print(links['links'])
             # jd = '''Selected intern's day-to-day responsibilities include:
 
