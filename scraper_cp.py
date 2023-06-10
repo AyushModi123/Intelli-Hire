@@ -3,13 +3,13 @@ from pyppeteer import launch
 import re
 
 
-async def scrape(links = (None, None, None)):
+async def scrape(links = (None, None, None, None)):
     browser = await launch(headless=True)  # change headless to True to run in headless mode
     page = await browser.newPage()
     # gfg = 'https://auth.geeksforgeeks.org/user/aniketmishra2709/'
     # cf = 'https://codeforces.com/profile/Benq/'
     # cc = 'https://www.codechef.com/users/aniket_1245'
-    gfg, cf, cc = links
+    gfg, cf, cc, lc = links
     courseData = []
     if gfg:
         try:

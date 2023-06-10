@@ -27,15 +27,17 @@ class data_extraction:
                     u = a.get_object()
                     if u[ank][uri]:
                         links.append(u[ank][uri])     
-        gfg = cf = cc = None
+        gfg = cf = cc = lc = None
         for link in links:
             if 'geeksforgeeks' in link:
                 gfg = link
             elif 'codeforces' in link:
                 cf = link
             elif 'codechef' in link:
-                cc = link                        
-        return gfg, cf, cc                
+                cc = link  
+            elif 'leetcode' in link:
+                lc = link                          
+        return gfg, cf, cc, lc                
 
     def education_grade(self):
         #Education Section

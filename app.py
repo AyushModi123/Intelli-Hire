@@ -49,7 +49,7 @@ class app:
         ]
         manager = multiprocessing.Manager()
         links = manager.dict()
-        links['links'] = (None, None, None)
+        links['links'] = (None, None, None, None)
         links['fetched'] = False
 
         def resume_print():
@@ -59,7 +59,7 @@ class app:
             print(de.context)
             links['links'] = de.links
             links['fetched'] = True
-            # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245')
+            # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245', None)
             # print(links['links'])
             # jd = '''Selected intern's day-to-day responsibilities include:
 
