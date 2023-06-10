@@ -1,10 +1,15 @@
-from flask import Flask, render_template, request, session, redirect, url_for, redirect
+from flask import Flask, render_template, request, session, redirect, url_for, redirect, jsonify
+from bson import ObjectId
+from flask_cors import CORS
+import json
 from pymongo import MongoClient
 import asyncio
 from scraper_cp import scrape, data_cleaning
 from gen_grade import data_extraction
 import threading
 import multiprocessing
+
+
 def scraping(links):
     print('scraping')
     while links['fetched'] == False:
@@ -15,15 +20,20 @@ def scraping(links):
     codingData = loop.run_until_complete(scrape(links['links']))
     loop.close()
     print(codingData)
-    if len(codingData)>0:
+    if len(codingData) > 0:
         cleaned_data = data_cleaning().clean_data(codingData)
         print(cleaned_data)
+
+
 class app:
     def __init__(self) -> None:
         self.resume = None
+        self.correct_answer = 0
         self.result = {}
+
     def run_flask_app(self):
         app = Flask(__name__)
+        cors = CORS(app, origins='http://localhost:3000', supports_credentials=True, expose_headers=['Content-Type'])
         app.secret_key = 'your_secret_key'
 
         mongodb_url = 'mongodb+srv://admin:1234@cluster0.o0dcqvb.mongodb.net/?retryWrites=true&w=majority'
@@ -68,18 +78,15 @@ class app:
 
         thread1 = threading.Thread(target=resume_print)
         p = multiprocessing.Process(target=scraping, args=(links,))
-        
-        @app.route('/', methods=['GET', 'POST'])
+
+        @app.route('/upload', methods=['GET', 'POST'])
         def upload():
             if request.method == 'POST':
                 self.resume = request.files['resume']
                 self.resume.save(self.resume.filename)
                 thread1.start()
                 p.start()
-                
-                return redirect('/quiz')
-            if request.method == 'GET':
-                return render_template('upload.html')
+                return {'message': 'Resume uploaded successfully and scraping started.'}
 
         def get_questions_from_collection(collection_name, limit):
             collection = db[collection_name]
@@ -97,40 +104,24 @@ class app:
 
         @app.route('/quiz', methods=['GET', 'POST'])
         def quiz():
-            if 'score' not in session:
-                session['score'] = 0
-                session['current_question'] = 0
-
             if request.method == 'POST':
-                submitted_answer = request.form.get('answer')
-                current_question = questions[session['current_question']]
-                if submitted_answer == current_question['answer']:
-                    session['score'] += 1
-                session['current_question'] += 1
+                score = request.get_json()['score']
+                self.correct_answer = int(score)
+                return jsonify({'score': score})
 
-            if 'start' in request.form:
-                session.clear()
-                return redirect(url_for('quiz'))
+            if request.method == 'GET':
+                serialized_questions = [json.loads(json.dumps(q, default=str)) for q in questions]
+                return jsonify(serialized_questions)
 
-            if session['current_question'] >= len(questions):
-                return redirect('/result')
-
-            current_question = questions[session['current_question']]
-            return render_template('quiz.html', question=current_question['question'], choices=current_question['choices'],
-                                current_question=session['current_question'])
         @app.route('/result', methods=['GET'])
         def result():
             thread1.join()
-            p.join()    
-            score = session['score']
-            self.result['Test Score'] = score
-            session.clear()
-            if request.method == 'GET':
-                return render_template('score.html', score=score, question_length=len(questions))
+            p.join()
+            self.result['Test Score'] = self.correct_answer
+            result_data = {'score': self.correct_answer}
+            return jsonify(result_data)
 
-            
         app.run(debug=False)
-
 
 
 if __name__ == '__main__':

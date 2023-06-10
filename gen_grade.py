@@ -1,10 +1,9 @@
-from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 import os
 import openai
 import ast
-load_dotenv()
-openai.api_key = os.environ['OPENAI_API_KEY']
+
+openai.api_key = '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'
 
 class data_extraction:
     def __init__(self, path):
