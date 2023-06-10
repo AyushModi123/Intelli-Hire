@@ -17,7 +17,9 @@ def scraping(links):
     print(codingData)
     if len(codingData)>0:
         cleaned_data = data_cleaning().clean_data(codingData)
-        print(cleaned_data, "Line 20")
+        print(cleaned_data)
+        grade = data_cleaning().grade_coding_profiles(codingData)
+        print(grade)
 class app:
     def __init__(self) -> None:
         self.resume = None
