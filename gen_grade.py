@@ -14,6 +14,30 @@ class data_extraction:
         self.grades = ['Very Bad', 'Bad', 'Moderate', 'Good', 'Very Good', 'Excellent']
         self.total_score = {'Education':self.grades[0], 'Experience':self.grades[0], 'Skills':self.grades[0], 'Projects':self.grades[0], 'Achievements':self.grades[0], 'Coding Profile(s)':self.grades[0], 'Test Score':self.grades[0]}  
         self.comp_dict = None
+        self.links = self.extract_links()
+    def extract_links(self):
+        key = '/Annots'
+        uri = '/URI'
+        ank = '/A'
+        links = []
+        for page in self.reader.pages:
+            pageObject = page.get_object()
+            if pageObject[key]:
+                ann = pageObject[key]
+                for a in ann:
+                    u = a.get_object()
+                    if u[ank][uri]:
+                        links.append(u[ank][uri])     
+        gfg = cf = cc = None
+        for link in links:
+            if 'geeksforgeeks' in link:
+                gfg = link
+            elif 'codeforces' in link:
+                cf = link
+            elif 'codechef' in link:
+                cc = link                        
+        return gfg, cf, cc                
+
     def education_grade(self):
         #Education Section
         college_score = self.comp_dict['Education']['Score']

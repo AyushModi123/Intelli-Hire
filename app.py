@@ -7,14 +7,17 @@ import threading
 import multiprocessing
 def scraping(links):
     print('scraping')
-    while links['links'] == None:
+    while links['links'] == (None, None, None):
         pass
+    print(links['links'])
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    codingData = loop.run_until_complete(scrape())
+    codingData = loop.run_until_complete(scrape(links['links']))
     loop.close()
-    cleaned_data = data_cleaning().clean_data(codingData)
-    print(cleaned_data)
+    print(codingData)
+    if len(codingData)>0:
+        cleaned_data = data_cleaning().clean_data(codingData)
+        print(cleaned_data)
 class app:
     def __init__(self) -> None:
         self.resume = None
@@ -34,30 +37,34 @@ class app:
             'Frontend',
             # Add more domain options as needed
         ]
-        
-        def resume_print():
-            print('resume_print')
-            print(self.resume.filename)
-            de = data_extraction(self.resume.filename)
-            print(de.context)
-            jd = '''Selected intern's day-to-day responsibilities include:
-
-            1. Writing algorithms in Python (at an advanced level) for predictive healthcare
-            2. Working on pre-processing data
-            3. Testing various hypotheses using statistical measures
-            4. Conducting scientific research
-            5. Developing mathematical algorithms
-
-            Additional Information:
-
-            We are looking for exceptional interns with advanced programming skills and a good understanding of data science. In addition to the minimum assured stipend, the interns may also receive additional incentives of up to Rs. 2000 on the basis of their performance.'''
-            de.jd_comparator(jd)
-            self.result = de.output_grade()
-            print(self.result)
-
         manager = multiprocessing.Manager()
         links = manager.dict()
-        links['links'] = None
+        links['links'] = (None, None, None)
+        
+
+        def resume_print():
+            print('resume_print')
+            # print(self.resume.filename)
+            de = data_extraction(self.resume.filename)
+            print(de.context)
+            # links['links'] = de.links
+            links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245')
+            # print(links['links'])
+            # jd = '''Selected intern's day-to-day responsibilities include:
+
+            # 1. Writing algorithms in Python (at an advanced level) for predictive healthcare
+            # 2. Working on pre-processing data
+            # 3. Testing various hypotheses using statistical measures
+            # 4. Conducting scientific research
+            # 5. Developing mathematical algorithms
+
+            # Additional Information:
+
+            # We are looking for exceptional interns with advanced programming skills and a good understanding of data science. In addition to the minimum assured stipend, the interns may also receive additional incentives of up to Rs. 2000 on the basis of their performance.'''
+            # de.jd_comparator(jd)
+            # self.result = de.output_grade()
+            # print(self.result)
+
         thread1 = threading.Thread(target=resume_print)
         p = multiprocessing.Process(target=scraping, args=(links,))
         
@@ -68,7 +75,7 @@ class app:
                 self.resume.save(self.resume.filename)
                 thread1.start()
                 p.start()
-                links['links'] = 'ad kjn'
+                
                 return redirect('/quiz')
             if request.method == 'GET':
                 return render_template('upload.html')
