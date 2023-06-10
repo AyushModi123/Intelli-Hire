@@ -1,6 +1,7 @@
 import asyncio
 from pyppeteer import launch
 import re
+import requests
 
 
 async def scrape(links = (None, None, None)):
@@ -11,23 +12,69 @@ async def scrape(links = (None, None, None)):
     # cc = 'https://www.codechef.com/users/aniket_1245'
     gfg, cf, cc = links
     print(gfg, cf, cc)
-    courseData = []
+    lc = 'https://leetcode.com/aniketmishra2709/'
+    codingData = []
+    if lc:
+        try:
+            username = lc.split('/')[-2]
+
+            url = "https://leetcode.com/graphql"
+
+            # Create a GraphQL client
+            query = f'''
+            {{
+              userContestRanking(username: "{username}") {{
+                rating
+                topPercentage
+              }}
+              matchedUser(username: "{username}") {{
+                submitStats: submitStatsGlobal {{
+                  acSubmissionNum {{
+                    difficulty
+                    count
+                  }}
+                }}
+              }}
+            }}
+            '''
+
+            headers = {
+                "Content-Type": "application/json",
+            }
+
+            payload = {
+               "query": query
+            }
+            response = requests.post(url, json=payload, headers=headers)
+            data = response.json()
+
+            print(data)
+            # user_contest_ranking = data['data']['userContestRanking']
+            # matched_user = data['data']['matchedUser']
+
+        except Exception as e:
+            print("Couldn't fetch data: ", e)
+
     if gfg:
         try:
             await page.goto(gfg, {'waitUntil': 'load'})
-            institute_rank = await page.evaluate('el => el.textContent.trim()', await page.querySelector('span.rankNum'))
-            lang_used = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div.basic_details div:last-child div.basic_details_data:last-child'))
-            overall_coding_score = await page.evaluate('el => el.innerText.trim()', await page.querySelector('div.score_cards_container div:first-child div.score_card span.score_card_value'))
+            # institute_rank = await page.evaluate('el => el.textContent.trim()', await page.querySelector('span.rankNum'))
+            # lang_used = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div.basic_details div:last-child div.basic_details_data:last-child'))
+            # overall_coding_score = await page.evaluate('el => el.innerText.trim()', await page.querySelector('div.score_cards_container div:first-child div.score_card span.score_card_value'))
             problems_solved = await page.evaluate('el => el.innerText.trim()', await page.querySelector('div.score_cards_container div:nth-child(2) div.score_card span.score_card_value'))
-            monthly_coding_score = await page.evaluate('el => el.innerText.trim()', await page.querySelector('div.score_cards_container div:last-child div.score_card:last-child span.score_card_value'))
+            # monthly_coding_score = await page.evaluate('el => el.innerText.trim()', await page.querySelector('div.score_cards_container div:last-child div.score_card:last-child span.score_card_value'))
+            level_wise = await page.evaluate('''() => { const elements = Array.from(document.querySelectorAll('div.solved_problem_section ul.linksTypeProblem li'));return elements.map(el => el.textContent.trim());}''')
+
             gfg_data = {
-                'institute_rank': institute_rank,
-                'lang_used': lang_used,
-                'overall_coding_score': overall_coding_score,
-                'monthly_coding_score': monthly_coding_score,
-                'problems_solved': problems_solved
+                # 'institute_rank': institute_rank,
+                # 'lang_used': lang_used,
+                # 'overall_coding_score': overall_coding_score,
+                # 'monthly_coding_score': monthly_coding_score,
+                'platform': 'gfg',
+                'problems_solved': problems_solved,
+                'level_wise_problems': level_wise
             }
-            courseData.append(gfg_data)
+            codingData.append(gfg_data)
         except Exception as e:
             print("Couldn't fetch data: ", e)
     if cf:
@@ -37,10 +84,11 @@ async def scrape(links = (None, None, None)):
             rating = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div.info ul li:first-child'))
             problems = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div._UserActivityFrame_footer div._UserActivityFrame_countersRow:first-child div._UserActivityFrame_counterValue'))
             cf_data = {
+                'platform': 'cf',
                 'rating': rating,
                 'problems_solved': problems
             }
-            courseData.append(cf_data)
+            codingData.append(cf_data)
         except Exception as e:
             print("Couldn't fetch data: ", e)
     if cc:
@@ -49,20 +97,19 @@ async def scrape(links = (None, None, None)):
             max_rating = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div.rating-header small'))
             rating_cc = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div.rating-number'))
             problems_cc = await page.evaluate('el => el.textContent.trim()', await page.querySelector('section.problems-solved div.content h5'))
-            stars = await page.evaluate('el => el.textContent.trim()', await page.querySelector('span.rating'))
-            div = await page.evaluate('el => el.textContent.trim()', await page.querySelector('div.rating-header:first-child div:first-child'))
+            # stars = await page.evaluate('el => el.textContent.trim()', await page.querySelector('span.rating'))
             cc_data = {
+                'platform': 'cc',
                 'max_rating': max_rating,
                 'rating': rating_cc,
                 'problems_solved': problems_cc,
-                'stars': stars,
-                'div': div
+                # 'stars': stars,
             }
-            courseData.append(cc_data)
+            codingData.append(cc_data)
         except Exception as e:
             print("Couldn't fetch data: ", e)
     await browser.close()
-    return courseData
+    return codingData
     
 class data_cleaning:
     def __init__(self) -> None:
@@ -88,6 +135,12 @@ class data_cleaning:
         codingData[1]['problems_solved'] = self.extract_values(codingData[1]['problems_solved'])
         codingData[2]['stars'] = self.remove_special_symbols(codingData[2]['stars'])
         return codingData
+    # def grade_coding_profiles(self, codingData):
+    #     total_problems = 0
+    #     for profiles in codingData:
+    #         if profiles.platform == 'gfg':
+
+    #         total_problems += profiles.problems_solved
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def scraping(links):
     print(codingData)
     if len(codingData)>0:
         cleaned_data = data_cleaning().clean_data(codingData)
-        print(cleaned_data)
+        print(cleaned_data, "Line 20")
 class app:
     def __init__(self) -> None:
         self.resume = None
