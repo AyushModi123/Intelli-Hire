@@ -10,7 +10,6 @@ async def scrape(links = (None, None, None)):
     # cf = 'https://codeforces.com/profile/Benq/'
     # cc = 'https://www.codechef.com/users/aniket_1245'
     gfg, cf, cc = links
-    print(gfg, cf, cc)
     courseData = []
     if gfg:
         try:
@@ -91,7 +90,12 @@ class data_cleaning:
 
 
 if __name__ == '__main__':
-    # cleaned_codingData = scrapeandcleanData()
-    # print(cleaned_codingData)
-    pass
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    codingData = loop.run_until_complete(scrape())
+    loop.close()
+    print(codingData)
+    if len(codingData)>0:
+        cleaned_data = data_cleaning().clean_data(codingData)
+        print(cleaned_data)
     
