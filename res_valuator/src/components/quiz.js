@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
   const [score, setScore] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(10);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,14 +13,36 @@ const Quiz = () => {
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data);
-        console.log(data);
       });
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsLeft((prevSeconds) => prevSeconds - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (secondsLeft === 0) {
+      handleNextQuestion();
+    }
+  }, [secondsLeft]);
 
   const handleAnswerSelection = (questionId, selectedChoice) => {
     const question = questions.find((q) => q._id === questionId);
     if (question && question.answer === selectedChoice) {
       setScore((prevScore) => prevScore + 1);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      setSecondsLeft(10);
+    } else {
+      handleSubmit();
     }
   };
 
@@ -34,9 +58,6 @@ const Quiz = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Handle the response from the server if needed
-        console.log(data);
-
         navigate("/result");
       })
       .catch((error) => {
@@ -45,30 +66,74 @@ const Quiz = () => {
       });
   };
 
+  const currentQuestion = questions[currentQuestionIndex];
+
   return (
-    <div>
-      <h2>Quiz</h2>
-      {questions.map((question) => (
-        <div key={question._id}>
-          <h3>{question.question}</h3>
-          <ul>
-            {question.choices.map((choice, index) => (
-              <li key={index}>
-                <input
-                  type="radio"
-                  id={choice}
-                  name={question._id}
-                  value={choice}
-                  onChange={() => handleAnswerSelection(question._id, choice)}
-                />
-                <label htmlFor={choice}>{choice}</label>
-              </li>
-            ))}
-          </ul>
+    <>
+      <div class="nine" style={{ padding: "40px" }}>
+        <h1>
+          Skill Assessment
+          <span>Unlock Your Potential: Discover, Develop, Excel!</span>
+        </h1>
+      </div>
+      <div className="quiz-container">
+        <div className="timer">
+          <svg
+            style={{ width: "40px", height: "40px" }}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z"
+              clipRule="evenodd"
+            />
+          </svg>
+
+          <span className="timer-left">
+            Time left ~
+            <span
+              className="timer"
+              style={{ color: "red", fontStyle: "oblique", fontSize: "20px" }}
+            >
+              {secondsLeft} seconds
+            </span>
+          </span>
         </div>
-      ))}
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+        {currentQuestion && (
+          <div key={currentQuestion._id} className="question-container">
+            <h3 className="question">{currentQuestion.question}</h3>
+            <ul className="choices">
+              {currentQuestion.choices.map((choice, index) => (
+                <li key={index} className="choice">
+                  <input
+                    type="radio"
+                    id={choice}
+                    name={currentQuestion._id}
+                    value={choice}
+                    onChange={() =>
+                      handleAnswerSelection(currentQuestion._id, choice)
+                    }
+                  />
+                  <label htmlFor={choice}>{choice}</label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {currentQuestionIndex < questions.length - 1 ? (
+          <button className="next-button" onClick={handleNextQuestion}>
+            Next
+          </button>
+        ) : (
+          <button className="submit-button" onClick={handleSubmit}>
+            Submit
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 

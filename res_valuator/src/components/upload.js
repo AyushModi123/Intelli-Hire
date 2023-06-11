@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Upload() {
@@ -27,8 +27,7 @@ function Upload() {
           console.log(data);
 
           // Redirect to "/quiz" route
-          if(resume!==null)
-             navigate("/quiz");
+          if (resume !== null) navigate("/quiz");
         })
         .catch((error) => {
           // Handle any errors that occur during the request
@@ -39,10 +38,32 @@ function Upload() {
 
   return (
     <div>
-      <h2>Resume Uploader</h2>
+      <div class="nine" style={{ padding: "40px" }}>
+        <h1>
+          Find T
+          <span>
+            Making the process of finding talent simplier, efficient and quicker
+          </span>
+        </h1>
+      </div>
       <form onSubmit={handleSubmit}>
-        <input type="file" accept=".pdf,.doc,.docx" onChange={handleResumeUpload} />
-        <button type="submit">Upload Resume</button>
+        <label for="images" class="drop-container">
+          <span class="drop-title">Drop files here</span>
+          or
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleResumeUpload}
+            required
+          />
+        </label>
+        <div
+          style={{ display: "flex", justifyContent: "center", padding: "50px" }}
+        >
+          <button type="submit" className="submit-button">
+            Upload Resume
+          </button>
+        </div>
       </form>
     </div>
   );
