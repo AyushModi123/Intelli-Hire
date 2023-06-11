@@ -2,9 +2,12 @@ from PyPDF2 import PdfReader
 import os
 import openai
 import ast
-from keys import openai_api_key
+import os
+from dotenv import load_dotenv
 
-openai.api_key = openai_api_key
+load_dotenv()
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 class data_extraction:
     def __init__(self, path):
