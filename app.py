@@ -8,7 +8,7 @@ from scraper_cp import scrape, data_cleaning
 from gen_grade import data_extraction
 import threading
 import multiprocessing
-
+from keys import app_secret_key, secret_mongodb_url
 
 def scraping(links):
     print('scraping')
@@ -37,9 +37,9 @@ class app:
     def run_flask_app(self):
         app = Flask(__name__)
         cors = CORS(app, origins='http://localhost:3000', supports_credentials=True, expose_headers=['Content-Type'])
-        app.secret_key = 'your_secret_key'
+        app.secret_key = app_secret_key
 
-        mongodb_url = 'mongodb+srv://admin:1234@cluster0.o0dcqvb.mongodb.net/?retryWrites=true&w=majority'
+        mongodb_url = secret_mongodb_url
         client = MongoClient(mongodb_url)
         db = client['test']
 

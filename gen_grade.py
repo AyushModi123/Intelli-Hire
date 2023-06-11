@@ -2,8 +2,9 @@ from PyPDF2 import PdfReader
 import os
 import openai
 import ast
+from keys import openai_api_key
 
-openai.api_key = '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'
+openai.api_key = openai_api_key
 
 class data_extraction:
     def __init__(self, path):
