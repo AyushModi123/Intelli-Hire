@@ -4,7 +4,7 @@ import re
 import requests
 
 
-async def scrape(links=(None, None, None)):
+async def scrape(links=(None, None, None, None)):
     browser = await launch(
         headless=True
     )  # change headless to True to run in headless mode
