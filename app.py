@@ -85,14 +85,19 @@ class app:
             # self.result = de.output_grade()
             # print(self.result)
 
-        thread1 = threading.Thread(target=resume_print)
-        p = multiprocessing.Process(target=scraping, args=(links,))
-
+        # thread1 = threading.Thread(target=resume_print)
+        # p = multiprocessing.Process(target=scraping, args=(links,))
+        global thread1 
+        global p
         @app.route('/upload', methods=['GET', 'POST'])
         def upload():
             if request.method == 'POST':
                 self.resume = request.files['resume']
                 self.resume.save(self.resume.filename)
+                global thread1
+                thread1 = threading.Thread(target=resume_print)
+                global p
+                p = multiprocessing.Process(target=scraping, args=(links,))
                 thread1.start()
                 p.start()
                 return {'message': 'Resume uploaded successfully and scraping started.'}
@@ -124,8 +129,12 @@ class app:
 
         @app.route('/result', methods=['GET'])
         def result():
+            global thread1
             thread1.join()
+            global p
             p.join()
+            # thread1 = None
+            # p = None
             self.result['Test Score'] = self.correct_answer
             result_data = {'score': self.correct_answer}
             return jsonify(result_data)
