@@ -180,18 +180,33 @@ class data_cleaning:
     def grade_coding_profiles(self, codingData):
         total_problems = 0
         grade = {}
+        grade['lc'] = grade['cc'] = grade['cf'] = grade['total_problems'] = 0
         for profiles in codingData:
             if profiles['platform'] == 'lc':
-                grade['lc'] = 10 - (int(profiles['topPercentage']) / 10)
+                grade['lc'] = 10 - (int(profiles['topPercentage']) / 5)
             # elif profiles['platform'] == 'gfg':
-            if profiles['platform'] == 'cf':
-                grade['cf'] = int(profiles['max_rating'])/4000 * 10
+            elif profiles['platform'] == 'cf':
+                grade['cf'] = int(profiles['max_rating'])/4000 * 5
             elif profiles['platform'] == 'cc':
-                grade['cc'] = int(profiles['max_rating'])/3500 * 10
-
+                grade['cc'] = int(profiles['max_rating'])/3500 * 5
             total_problems += int(profiles['problems_solved'])
-        grade['total_problems'] = total_problems
-        return grade
+
+        if total_problems >= 1000:
+            grade['total_problems'] = 5
+        elif total_problems >= 800:
+            grade['total_problems'] = 4
+        elif total_problems >= 600:
+            grade['total_problems'] = 3
+        elif total_problems >= 400:
+            grade['total_problems'] = 2
+        elif total_problems >= 200:
+            grade['total_problems'] = 1
+        else:
+            grade['total_problems'] = 0
+        
+        final_grade = (grade['lc'] + grade['cc'] + grade['cf'] + grade['total_problems'])/4
+        print(final_grade)
+        return final_grade
 
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()
