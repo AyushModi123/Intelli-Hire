@@ -31,17 +31,18 @@ def scraping(links):
         links['links'] = (None, None, None, None)
         return
     links['links'] = (None, None, None, None)
+    dc = data_cleaning()
     print(codingData)
     if len(codingData) > 0:
         try:
-            cleaned_data = data_cleaning().clean_data(codingData)
-            print(cleaned_data)
+            cleaned_data = dc.clean_data(codingData)
+            # print(cleaned_data)
         except Exception as e:    
             links['process_error'] = e
             return
         try:
-            grade = data_cleaning().grade_coding_profiles(codingData)
-            print(grade)
+            links['Coding Profile(s)'] = dc.grade_coding_profiles(cleaned_data)
+            print(links['Coding Profile(s)'])
         except Exception as e:
             links['process_error'] = e
             return
@@ -79,12 +80,13 @@ class app:
         links['links'] = (None, None, None, None)
         links['fetched'] = False
         links['process_error'] = None
+        links['Coding Profile(s)'] = 'Very Bad'
         def resume_print():
             print('resume_print')
             # print(self.resume.filename)
             try:
                 de = data_extraction(self.resume.filename)
-                print(de.context)
+                # print(de.context)
             except Exception as e:
                 self.thread_error = e
                 links['fetched'] = True
@@ -114,7 +116,7 @@ class app:
                 sys.exit(thread_id)
             try:
                 self.result = de.output_grade()
-                print(self.result)
+                # print(self.result)
             except Exception as e:
                 self.thread_error = e
                 thread_id = threading.get_ident()
@@ -173,6 +175,8 @@ class app:
             if links['process_error']:
                 print(links['process_error'])
             self.result['Test Score'] = self.correct_answer
+            self.result['Coding Profile(s)'] = links['Coding Profile(s)']
+            print(self.result)
             result_data = {'score': self.correct_answer}
             return jsonify(result_data)
 

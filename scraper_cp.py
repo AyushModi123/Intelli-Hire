@@ -147,7 +147,7 @@ async def scrape(links=(None, None, None, None)):
 
 class data_cleaning:
     def __init__(self) -> None:
-        pass
+        self.grades = ['Very Bad', 'Bad', 'Moderate', 'Good', 'Very Good', 'Excellent']
 
     def extract_values(self, string):
         regex = r"(\d+)"
@@ -183,7 +183,7 @@ class data_cleaning:
         grade['lc'] = grade['cc'] = grade['cf'] = grade['total_problems'] = 0
         for profiles in codingData:
             if profiles['platform'] == 'lc':
-                grade['lc'] = 10 - (int(profiles['topPercentage']) / 5)
+                grade['lc'] = 5 - (int(profiles['topPercentage']) / 20)
             # elif profiles['platform'] == 'gfg':
             elif profiles['platform'] == 'cf':
                 grade['cf'] = int(profiles['max_rating'])/4000 * 5
@@ -204,9 +204,8 @@ class data_cleaning:
         else:
             grade['total_problems'] = 0
         
-        final_grade = (grade['lc'] + grade['cc'] + grade['cf'] + grade['total_problems'])/4
-        print(final_grade)
-        return final_grade
+        final_grade = round((grade['lc'] + grade['cc'] + grade['cf'] + grade['total_problems'])/4)
+        return self.grades[final_grade]
 
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()
