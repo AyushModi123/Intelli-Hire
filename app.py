@@ -28,7 +28,9 @@ def scraping(links):
         loop.close()
     except Exception as e:
         links['process_error'] = e
+        links['links'] = (None, None, None, None)
         return
+    links['links'] = (None, None, None, None)
     print(codingData)
     if len(codingData) > 0:
         try:
