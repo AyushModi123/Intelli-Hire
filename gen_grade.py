@@ -70,11 +70,9 @@ class data_extraction:
         try:
             response = openai.ChatCompletion.create(model=model,
                             messages=[{"role": "user", "content": prompt}])
-        except Exception as e:
-            print(e)   
-            return 
-        comp_str = response.choices[0].message.content
-        self.comp_dict = ast.literal_eval(comp_str)    
+        except Exception as e:  
+            return e
+        self.comp_dict = ast.literal_eval(response.choices[0].message.content)
     def output_grade(self, coding_profiles='Very Bad', test_score='Very Bad'):
         self.education_grade()
         self.total_score['Experience'] = self.comp_dict['Experience']
@@ -99,5 +97,5 @@ if __name__ == '__main__':
     Additional Information:
 
     We are looking for exceptional interns with advanced programming skills and a good understanding of data science. In addition to the minimum assured stipend, the interns may also receive additional incentives of up to Rs. 2000 on the basis of their performance.'''
-    dt.jd_comparator(jd)
+    print(dt.jd_comparator(jd))
     print(dt.output_grade())

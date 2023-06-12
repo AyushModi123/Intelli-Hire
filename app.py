@@ -9,8 +9,8 @@ from gen_grade import data_extraction
 import threading
 import multiprocessing
 import os
+import sys
 from dotenv import load_dotenv
-
 load_dotenv()
 
 MONGODB_URL = os.getenv('MONGODB_URL')
@@ -21,17 +21,28 @@ def scraping(links):
     while links['fetched'] == False:
         pass
     print(links['links'])
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    codingData = loop.run_until_complete(scrape(links['links']))
-    loop.close()
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        codingData = loop.run_until_complete(scrape(links['links']))
+        loop.close()
+    except Exception as e:
+        links['process_error'] = e
+        return
     print(codingData)
     if len(codingData) > 0:
-        cleaned_data = data_cleaning().clean_data(codingData)
-        print(cleaned_data)
-        grade = data_cleaning().grade_coding_profiles(codingData)
-        print(grade)
-
+        try:
+            cleaned_data = data_cleaning().clean_data(codingData)
+            print(cleaned_data)
+        except Exception as e:    
+            links['process_error'] = e
+            return
+        try:
+            grade = data_cleaning().grade_coding_profiles(codingData)
+            print(grade)
+        except Exception as e:
+            links['process_error'] = e
+            return
 
 
 class app:
@@ -39,14 +50,19 @@ class app:
         self.resume = None
         self.correct_answer = 0
         self.result = {}
-
+        self.thread_error = None
     def run_flask_app(self):
         app = Flask(__name__)
         cors = CORS(app, origins='http://localhost:3000', supports_credentials=True, expose_headers=['Content-Type'])
         app.secret_key = APP_SECRET_KEY
 
         mongodb_url = MONGODB_URL
-        client = MongoClient(mongodb_url)
+        try:
+            client = MongoClient(mongodb_url)
+        except Exception as e:
+            print(e)
+            return
+
         db = client['test']
 
         domain_options = [
@@ -60,7 +76,7 @@ class app:
         links = manager.dict()
         links['links'] = (None, None, None, None)
         links['fetched'] = False
-
+        links['process_error'] = None
         def resume_print():
             print('resume_print')
             # print(self.resume.filename)
@@ -70,23 +86,31 @@ class app:
             links['fetched'] = True
             # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245', None)
             # print(links['links'])
-            # jd = '''Selected intern's day-to-day responsibilities include:
+            jd = '''Selected intern's day-to-day responsibilities include:
 
-            # 1. Writing algorithms in Python (at an advanced level) for predictive healthcare
-            # 2. Working on pre-processing data
-            # 3. Testing various hypotheses using statistical measures
-            # 4. Conducting scientific research
-            # 5. Developing mathematical algorithms
+            1. Writing algorithms in Python (at an advanced level) for predictive healthcare
+            2. Working on pre-processing data
+            3. Testing various hypotheses using statistical measures
+            4. Conducting scientific research
+            5. Developing mathematical algorithms
 
-            # Additional Information:
+            Additional Information:
 
-            # We are looking for exceptional interns with advanced programming skills and a good understanding of data science. In addition to the minimum assured stipend, the interns may also receive additional incentives of up to Rs. 2000 on the basis of their performance.'''
-            # de.jd_comparator(jd)
-            # self.result = de.output_grade()
-            # print(self.result)
+            We are looking for exceptional interns with advanced programming skills and a good understanding of data science. In addition to the minimum assured stipend, the interns may also receive additional incentives of up to Rs. 2000 on the basis of their performance.'''
+            
+            
+            self.thread_error = de.jd_comparator(jd)
+            if self.thread_error:
+                thread_id = threading.get_ident()
+                sys.exit(thread_id)
+            try:
+                self.result = de.output_grade()
+                print(self.result)
+            except Exception as e:
+                self.thread_error = e
+                thread_id = threading.get_ident()
+                sys.exit(thread_id)
 
-        # thread1 = threading.Thread(target=resume_print)
-        # p = multiprocessing.Process(target=scraping, args=(links,))
         global thread1 
         global p
         @app.route('/upload', methods=['GET', 'POST'])
@@ -133,8 +157,12 @@ class app:
             thread1.join()
             global p
             p.join()
-            # thread1 = None
-            # p = None
+            # thread error is in self.thread_error 
+            if self.thread_error:
+                print(self.thread_error)
+            # process error is in links['process_error]    
+            if links['process_error']:
+                print(links['process_error'])
             self.result['Test Score'] = self.correct_answer
             result_data = {'score': self.correct_answer}
             return jsonify(result_data)
