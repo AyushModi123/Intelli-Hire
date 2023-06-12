@@ -14,9 +14,7 @@ async def scrape(links=(None, None, None, None)):
     if lc:
         try:
             username = lc.split("/")[-2]
-
             url = "https://leetcode.com/graphql"
-
             # Create a GraphQL client
             query = f"""
             {{
@@ -34,32 +32,25 @@ async def scrape(links=(None, None, None, None)):
               }}
             }}
             """
-
             headers = {
                 "Content-Type": "application/json",
             }
-
             payload = {"query": query}
             response = requests.post(url, json=payload, headers=headers)
             data = response.json()['data']
-
             lc_data = {
                 'platform': 'lc',
                 'rating': data['userContestRanking']['rating'],
                 'topPercentage': data['userContestRanking']['topPercentage'],
             }
             ac_submission_num = data['matchedUser']['submitStats']['acSubmissionNum']
-
             for submission in ac_submission_num:
                 difficulty = 'problems_solved' if submission['difficulty'] == 'All' else submission['difficulty']
                 count = submission['count']
                 lc_data[difficulty] = count
-            
             codingData.append(lc_data)
-
         except Exception as e:
             print("Couldn't fetch data: ", e)
-
     if gfg:
         try:
             await page.goto(gfg, {"waitUntil": "load"})
@@ -76,7 +67,6 @@ async def scrape(links=(None, None, None, None)):
             level_wise = await page.evaluate(
                 """() => { const elements = Array.from(document.querySelectorAll('div.solved_problem_section ul.linksTypeProblem li'));return elements.map(el => el.textContent.trim());}"""
             )
-
             level_data = {}
             for level in ['EASY', 'MEDIUM', 'HARD']:
                 for problem in level_wise:
@@ -84,7 +74,6 @@ async def scrape(links=(None, None, None, None)):
                         count = problem.split(' ')[-1].strip('()')
                         level_data[level] = count
                         break
-
             gfg_data = {
                 # 'institute_rank': institute_rank,
                 # 'lang_used': lang_used,
@@ -147,8 +136,7 @@ async def scrape(links=(None, None, None, None)):
 
 class data_cleaning:
     def __init__(self) -> None:
-        self.grades = ['Very Bad', 'Bad', 'Moderate', 'Good', 'Very Good', 'Excellent']
-
+        pass
     def extract_values(self, string):
         regex = r"(\d+)"
         matches = re.findall(regex, string)
@@ -160,11 +148,9 @@ class data_cleaning:
             value1 = matches[0]
             return value1
         return None
-
     def remove_special_symbols(self, string):
         regex = r"[^\w\s]"
         return re.sub(regex, "", string)
-
     def clean_data(self, codingData):
         for data in codingData:
             if data["platform"] == 'cf':
@@ -173,10 +159,8 @@ class data_cleaning:
             elif data["platform"] == 'cc':
                 data["max_rating"] = self.extract_values(data["max_rating"])
                 data["problems_solved"] = self.extract_values(data["problems_solved"])
-                # codingData[2]['stars'] = self.remove_special_symbols(codingData[2]['stars'])
-            
+                # codingData[2]['stars'] = self.remove_special_symbols(codingData[2]['stars'])           
         return codingData
-
     def grade_coding_profiles(self, codingData):
         total_problems = 0
         grade = {}
@@ -190,7 +174,6 @@ class data_cleaning:
             elif profiles['platform'] == 'cc':
                 grade['cc'] = int(profiles['max_rating'])/3500 * 5
             total_problems += int(profiles['problems_solved'])
-
         if total_problems >= 1000:
             grade['total_problems'] = 5
         elif total_problems >= 800:
@@ -203,9 +186,9 @@ class data_cleaning:
             grade['total_problems'] = 1
         else:
             grade['total_problems'] = 0
-        
-        final_grade = round((grade['lc'] + grade['cc'] + grade['cf'] + grade['total_problems'])/4)
-        return self.grades[final_grade]
+        coding_grade = round((grade['lc'] + grade['cc'] + grade['cf'] + grade['total_problems'])/4, 2)
+        return coding_grade
+
 
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()

@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 openai.api_key = os.getenv('OPENAI_API_KEY')
+
 
 class data_extraction:
     def __init__(self, path):
@@ -15,7 +15,7 @@ class data_extraction:
         self.num_pages = len(self.reader.pages)
         self.context = self.reader.pages[0].extract_text() # 1 page resume 
         self.grades = ['Very Bad', 'Bad', 'Moderate', 'Good', 'Very Good', 'Excellent']
-        self.total_score = {'Education':self.grades[0], 'Experience':self.grades[0], 'Skills':self.grades[0], 'Projects':self.grades[0], 'Achievements':self.grades[0], 'Coding Profile(s)':self.grades[0], 'Test Score':0}  
+        self.total_score = {'Education':0, 'Experience':self.grades[0], 'Skills':self.grades[0], 'Projects':self.grades[0], 'Achievements':self.grades[0], 'Coding Profile(s)':0, 'Test Score':0}  
         self.comp_dict = None
         self.links = self.extract_links()
     def extract_links(self):
@@ -42,25 +42,24 @@ class data_extraction:
             elif 'leetcode' in link:
                 lc = link                          
         return gfg, cf, cc, lc                
-
     def education_grade(self):
         #Education Section
         college_score = self.comp_dict['Education']['Score']
         if float(college_score)<6.5:  ##Assuming CGPA
-            self.total_score['Education'] = self.grades[0]
+            self.total_score['Education'] = 0
             return
         college_name = self.comp_dict['Education']['Name'].lower()
         if 'iit' in college_name or 'nit' in college_name \
                 or 'indian institute of technology' in college_name  or 'national institute of technology' in college_name:
             if float(college_score) >9.0:
-                education_grade = self.grades[5]
+                education_grade = 5
             else:
-                education_grade = self.grades[4]
+                education_grade = 4
         else:
             if float(college_score) >8.5:
-                education_grade = self.grades[4]
+                education_grade = 4
             else:
-                education_grade = self.grades[3]
+                education_grade = 3
         self.total_score['Education'] = education_grade
     def jd_comparator(self, jd):
         if not self.context:
