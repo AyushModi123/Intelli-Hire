@@ -51,13 +51,21 @@ class app:
         self.correct_answer = 0
         self.result = {}
         self.thread_error = None
-    def final_verdict(self):
+    def final_verdict(self, threshold=70):
         gradestoscore = {'Very Bad':0, 'Bad':1, 'Moderate':2, 'Good':3, 'Very Good':4, 'Excellent':5}
         for key in self.result.keys():
             if not (key == 'Test Score' or key == 'Coding Profile(s)' or key == 'Education'):
                 self.result[key] = gradestoscore[self.result[key]]  
         final_grade = self.result['Education']*2 + self.result['Experience']*6 + self.result['Skills']*2 + self.result['Projects']*5 + self.result['Achievements']*1 + self.result['Coding Profile(s)']*2 + self.result['Test Score']*1
-        return final_grade 
+        try:
+            assert 0 <= threshold <= 100, "Value must be between 0 and 100(inclusive)"
+        except Exception as e:
+            print(e)
+            return -1
+        if final_grade>=threshold:
+            return True, final_grade 
+        else:
+            return False, final_grade 
     def run_flask_app(self):
         app = Flask(__name__)
         cors = CORS(app, origins='http://localhost:3000', supports_credentials=True, expose_headers=['Content-Type'])
@@ -159,8 +167,9 @@ class app:
             self.result['Test Score'] = self.correct_answer
             self.result['Coding Profile(s)'] = links['Coding Profile(s)']
             print(self.result)
-            candidate_score = self.final_verdict()
-            print(candidate_score, '%')
+            selection, candidate_score = self.final_verdict()
+            if candidate_score>0:
+                print(candidate_score, '%\n', selection)
             result_data = {'score': self.correct_answer}
             return jsonify(result_data)
         app.run(debug=False)
