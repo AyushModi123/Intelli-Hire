@@ -80,8 +80,15 @@ class app:
         def resume_print():
             print('resume_print')
             # print(self.resume.filename)
-            de = data_extraction(self.resume.filename)
-            print(de.context)
+            try:
+                de = data_extraction(self.resume.filename)
+                print(de.context)
+            except Exception as e:
+                self.thread_error = e
+                links['fetched'] = True
+                thread_id = threading.get_ident()
+                sys.exit(thread_id)
+
             links['links'] = de.links
             links['fetched'] = True
             # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245', None)
