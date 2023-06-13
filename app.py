@@ -49,7 +49,7 @@ class app:
     def __init__(self) -> None:
         self.resume = None
         self.correct_answer = 0
-        self.result = {}
+        self.result = {'Education':0, 'Experience':'Very Bad', 'Skills':'Very Bad', 'Projects':'Very Bad', 'Achievements':'Very Bad', 'Coding Profile(s)':0, 'Test Score':0}  
         self.thread_error = None
     def final_verdict(self, threshold=70):
         gradestoscore = {'Very Bad':0, 'Bad':1, 'Moderate':2, 'Good':3, 'Very Good':4, 'Excellent':5}
