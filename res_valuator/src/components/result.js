@@ -1,13 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Result = () => {
+const Result = (randomId) => {
   const [score, setScore] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleBackNavigation = () => {
+      navigate("/"); // Redirect to the home page when back button is clicked
+    };
+
+    window.addEventListener("popstate", handleBackNavigation);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackNavigation);
+    };
+  }, [navigate]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/result")
       .then((res) => res.json())
       .then((data) => {
         setScore(data.score);
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error);

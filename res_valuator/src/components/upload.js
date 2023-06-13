@@ -1,13 +1,24 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Upload() {
+function Upload({ randomId }) {
   const navigate = useNavigate();
   const [resume, setResume] = useState(null);
+  const [hover, setHover] = useState(false);
 
   const handleResumeUpload = (event) => {
     const uploadedFile = event.target.files[0];
     setResume(uploadedFile);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const uploadedFile = event.dataTransfer.files[0];
+    setResume(uploadedFile);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
   };
 
   const handleSubmit = (event) => {
@@ -24,10 +35,7 @@ function Upload() {
         .then((response) => response.json())
         .then((data) => {
           // Handle the response from the server if needed
-          console.log(data);
-
-          // Redirect to "/quiz" route
-          if (resume !== null) navigate("/quiz");
+          alert(data.message);
         })
         .catch((error) => {
           // Handle any errors that occur during the request
@@ -36,22 +44,40 @@ function Upload() {
     }
   };
 
+  const handleStartAssessment = () => {
+    if (resume !== null) {
+      navigate(`/quiz/${randomId}`);
+    } else {
+      alert("Upload your resume first");
+    }
+  };
+
+  const handleClick = () => {
+    setHover((prevHover) => !prevHover);
+  };
+
   return (
     <div>
-      <div class="nine" style={{ padding: "40px" }}>
+      <div className="nine" style={{ padding: "40px" }}>
         <h1>
-          Find T
+          Intelli Hire
           <span>
-            Making the process of finding talent simplier, efficient and quicker
+            Making the process of finding talent simpler, efficient, and quicker
           </span>
         </h1>
       </div>
       <form onSubmit={handleSubmit}>
-        <label for="images" class="drop-container">
-          <span class="drop-title">Drop files here</span>
+        <label
+          htmlFor="images"
+          className="drop-container"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          <span className="drop-title">Drop files here</span>
           or
           <input
             type="file"
+            id="images"
             accept=".pdf,.doc,.docx"
             onChange={handleResumeUpload}
             required
@@ -65,6 +91,52 @@ function Upload() {
           </button>
         </div>
       </form>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "20px",
+          gap: "10px",
+          alignItems: "end",
+        }}
+      >
+        {hover && (
+          <div className="rules">
+            Rules:
+            <br />
+            1. You will encounter 10 aptitude-based questions.
+            <br />
+            2. You have only one opportunity to answer each question.
+            <br />
+            3. Each question has a time limit of 30 seconds.
+            <br />
+          </div>
+        )}
+        <button
+          type="button"
+          className="submit-button"
+          onClick={handleStartAssessment}
+          style={{ backgroundColor: "#f5287c" }}
+        >
+          Start Skill Assessment
+        </button>
+        <svg
+          onClick={handleClick}
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-6 h-6"
+          style={{ width: "30px", height: "30px", color: "#f5287c" }}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+          />
+        </svg>
+      </div>
     </div>
   );
 }

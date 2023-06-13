@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Quiz = () => {
+const Quiz = ({ randomId }) => {
   const [questions, setQuestions] = useState([]);
   const [score, setScore] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(10);
+  const [secondsLeft, setSecondsLeft] = useState(30);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/quiz")
+    fetch(`http://127.0.0.1:5000/quiz/${randomId}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data);
@@ -40,7 +40,7 @@ const Quiz = () => {
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-      setSecondsLeft(10);
+      setSecondsLeft(30);
     } else {
       handleSubmit();
     }
@@ -48,8 +48,7 @@ const Quiz = () => {
 
   const handleSubmit = () => {
     const scoreData = { score };
-
-    fetch("http://127.0.0.1:5000/quiz", {
+    fetch(`http://127.0.0.1:5000/quiz/${randomId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -104,7 +103,9 @@ const Quiz = () => {
         </div>
         {currentQuestion && (
           <div key={currentQuestion._id} className="question-container">
-            <h3 className="question">{currentQuestion.question}</h3>
+            <h3 className="question">
+              Q{currentQuestionIndex + 1}-{currentQuestion.question}
+            </h3>
             <ul className="choices">
               {currentQuestion.choices.map((choice, index) => (
                 <li key={index} className="choice">

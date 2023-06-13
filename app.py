@@ -132,7 +132,7 @@ class app:
                 p = multiprocessing.Process(target=scraping, args=(links,))
                 thread1.start()
                 p.start()
-                return {'message': 'Resume uploaded successfully and scraping started.'}
+                return {'message': 'Resume uploaded successfully.'}
         def get_questions_from_collection(collection_name, limit):
             collection = db[collection_name]
             total_questions = collection.count_documents({})
@@ -144,8 +144,8 @@ class app:
         frontend_questions = get_questions_from_collection('frontend', 5)
         backend_questions = get_questions_from_collection('backend', 5)
         questions = frontend_questions[:5] + backend_questions[:5]  # Retrieve 5 questions from each collection
-        @app.route('/quiz', methods=['GET', 'POST'])
-        def quiz():
+        @app.route('/quiz/<id>', methods=['GET', 'POST'])
+        def quiz(id):
             if request.method == 'POST':
                 score = request.get_json()['score']
                 self.correct_answer = int(score)

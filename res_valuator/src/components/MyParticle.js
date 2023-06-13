@@ -7,7 +7,8 @@ const MyParticleElement = () => {
     await loadFull(engine);
   }, []);
 
-  const particlesLoaded = useCallback(async (container) => {}, []);
+  const particlesLoaded = useCallback(async (container) => {
+  }, []);
 
   return (
     <Particles
@@ -20,7 +21,7 @@ const MyParticleElement = () => {
           //     value: "#000000",
           // },
         },
-        fpsLimit: 120,
+        fpsLimit: 220,
         interactivity: {
           events: {
             onClick: {
@@ -28,8 +29,8 @@ const MyParticleElement = () => {
               mode: "push",
             },
             onHover: {
-              enable: false,
-              mode: "repulse",
+              enable: true,
+              mode: "grab",
             },
             resize: true,
           },
@@ -66,7 +67,7 @@ const MyParticleElement = () => {
             random: true,
             speed: 2,
             straight: false,
-            bounce: false,
+            bounce:false
           },
           number: {
             density: {
@@ -82,7 +83,7 @@ const MyParticleElement = () => {
             type: "circle",
           },
           size: {
-            value: { min: 1, max: 5 },
+            value: { min: 1, max: 2 },
           },
         },
         detectRetina: true,
