@@ -53,10 +53,11 @@ class app:
         self.thread_error = None
     def final_verdict(self, threshold=70):
         gradestoscore = {'Very Bad':0, 'Bad':1, 'Moderate':2, 'Good':3, 'Very Good':4, 'Excellent':5}
+        score_result = self.result.copy() 
         for key in self.result.keys():
             if not (key == 'Test Score' or key == 'Coding Profile(s)' or key == 'Education'):
-                self.result[key] = gradestoscore[self.result[key]]  
-        final_grade = self.result['Education']*2 + self.result['Experience']*6 + self.result['Skills']*2 + self.result['Projects']*5 + self.result['Achievements']*1 + self.result['Coding Profile(s)']*2 + self.result['Test Score']*1
+                score_result[key] = gradestoscore[self.result[key]]  
+        final_grade = score_result['Education']*2 + score_result['Experience']*6 + score_result['Skills']*2 + score_result['Projects']*5 + score_result['Achievements']*1 + score_result['Coding Profile(s)']*2 + score_result['Test Score']*1
         try:
             assert 0 <= threshold <= 100, "Value must be between 0 and 100(inclusive)"
         except Exception as e:
