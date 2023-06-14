@@ -5,6 +5,7 @@ function Upload({ randomId }) {
   const navigate = useNavigate();
   const [resume, setResume] = useState(null);
   const [hover, setHover] = useState(false);
+  const [startassessment , setstartassessment] = useState(false);
 
   const handleResumeUpload = (event) => {
     const uploadedFile = event.target.files[0];
@@ -45,7 +46,7 @@ function Upload({ randomId }) {
   };
 
   const handleStartAssessment = () => {
-    if (resume !== null) {
+    if (resume !== null&&startassessment) {
       navigate(`/quiz/${randomId}`);
     } else {
       alert("Upload your resume first");
@@ -55,6 +56,10 @@ function Upload({ randomId }) {
   const handleClick = () => {
     setHover((prevHover) => !prevHover);
   };
+
+  const handleAssessment=()=>{
+    setstartassessment((prev)=>!prev);
+  }
 
   return (
     <div>
@@ -86,7 +91,7 @@ function Upload({ randomId }) {
         <div
           style={{ display: "flex", justifyContent: "center", padding: "50px" }}
         >
-          <button type="submit" className="submit-button">
+          <button type="submit" className="submit-button" onClick={handleAssessment}>
             Upload Resume
           </button>
         </div>
