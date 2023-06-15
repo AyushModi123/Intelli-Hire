@@ -51,13 +51,14 @@ class app:
         self.correct_answer = 0
         self.result = {'Education':0, 'Experience':'Very Bad', 'Skills':'Very Bad', 'Projects':'Very Bad', 'Achievements':'Very Bad', 'Coding Profile(s)':0, 'Test Score':0}  
         self.thread_error = None
-    def final_verdict(self, threshold=70):
+    def final_verdict(self, threshold=60):
         gradestoscore = {'Very Bad':0, 'Bad':1, 'Moderate':2, 'Good':3, 'Very Good':4, 'Excellent':5}
         score_result = self.result.copy() 
         for key in self.result.keys():
             if not (key == 'Test Score' or key == 'Coding Profile(s)' or key == 'Education'):
-                score_result[key] = gradestoscore[self.result[key]]  
-        final_grade = score_result['Education']*2 + score_result['Experience']*6 + score_result['Skills']*2 + score_result['Projects']*5 + score_result['Achievements']*1 + score_result['Coding Profile(s)']*2 + score_result['Test Score']*1
+                score_result[key] = gradestoscore[self.result[key]]          
+        final_grade = score_result['Education']*2 + score_result['Experience']*4.5 + score_result['Skills']*2 + score_result['Projects']*3.8 + score_result['Achievements']*1.7 + score_result['Coding Profile(s)']*1.5 + score_result['Test Score']*2.7
+        final_grade=round((final_grade*100)/91,2)
         try:
             assert 0 <= threshold <= 100, "Value must be between 0 and 100(inclusive)"
         except Exception as e:
@@ -97,17 +98,13 @@ class app:
             links['fetched'] = True
             # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245', None)
             # print(links['links'])
-            jd = '''Selected intern's day-to-day responsibilities include:
-
-            1. Writing algorithms in Python (at an advanced level) for predictive healthcare
-            2. Working on pre-processing data
-            3. Testing various hypotheses using statistical measures
-            4. Conducting scientific research
-            5. Developing mathematical algorithms
-
-            Additional Information:
-
-            We are looking for exceptional interns with advanced programming skills and a good understanding of data science. In addition to the minimum assured stipend, the interns may also receive additional incentives of up to Rs. 2000 on the basis of their performance.'''
+            jd = '''1. Collaborate with the development team to understand project requirements and objectives
+2. Assist in designing, coding, and testing web applications using the MERN stack
+3. Implement and maintain front-end components using React.js
+4. Develop and integrate backend APIs using Node.js and Express.js or Laravel (PHP)
+5. Work with APIs and utilize Postman for testing and integration
+6. Self-handle E2E approach
+7. Work on Firebase to frontend and backend'''
             self.thread_error = de.jd_comparator(jd)
             if self.thread_error:
                 thread_id = threading.get_ident()
@@ -141,9 +138,8 @@ class app:
             else:
                 questions = list(collection.aggregate([{'$sample': {'size': limit}}]))
             return questions[:limit]
-        frontend_questions = get_questions_from_collection('frontend', 5)
-        backend_questions = get_questions_from_collection('backend', 5)
-        questions = frontend_questions[:5] + backend_questions[:5]  # Retrieve 5 questions from each collection
+        aptitude_questions = get_questions_from_collection('aptitude', 10)
+        questions =  aptitude_questions
         @app.route('/quiz/<id>', methods=['GET', 'POST'])
         def quiz(id):
             if request.method == 'POST':
@@ -171,7 +167,7 @@ class app:
             selection, candidate_score = self.final_verdict()
             if candidate_score>0:
                 print(candidate_score, '%\n', selection)
-            result_data = {'score': self.correct_answer}
+            result_data = {'score': self.correct_answer,'selection':selection,'candidate_score':candidate_score}
             return jsonify(result_data)
         app.run(debug=False)
 

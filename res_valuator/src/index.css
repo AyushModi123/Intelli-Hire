@@ -571,6 +571,8 @@ svg.w-6.h-6 {
   flex-direction: column;
   width: 100%;
   height: auto;
+  font-family: sans-serif;
+  font-weight: bolder;
 }
 
 #summary__category .categoryicon {
@@ -893,4 +895,42 @@ button:hover {
 .err-heading {
   color: white;
   font-size: 25vw;
+}
+
+
+
+#d3-chart path {
+  transition: all ease-in-out 0.3s;
+  position: relative;
+}
+
+#d3-chart .lagend rect {
+  cursor: pointer;
+}
+
+#d3-chart .lagend[disabled="true"] {
+  opacity: 0.5;
+}
+
+#d3-chart .lagend[disabled="true"] text {
+  text-decoration: line-through;
+}
+
+.tooltip {
+  font-size: 14px;
+  line-height: 1.35;
+  letter-spacing: 0.8px;
+  word-spacing: 1.05px;
+  pointer-events: none;
+  padding: 10px;
+  position: absolute;
+  background: #eee;
+  color: #555;
+  min-width: 100px;
+  z-index: 10000;
+  opacity: 0;
+  border-radius: 3px;
+  box-shadow: 5px 4px 5px 0px rgba(0, 0, 0, 0.278);
+  text-transform: capitalize;
+  transition: left ease-in-out 0.3s, top ease-in-out 0.6s;
 }

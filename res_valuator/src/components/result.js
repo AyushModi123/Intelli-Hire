@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Result = (randomId) => {
-  const [score, setScore] = useState(null);
+  const [finalverdict, setFinalVerdict] = useState({});
+  const [score,setscore]=useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleBackNavigation = () => {
-      navigate("/"); // Redirect to the home page when back button is clicked
+      navigate("/");
     };
 
     window.addEventListener("popstate", handleBackNavigation);
@@ -22,8 +23,8 @@ const Result = (randomId) => {
     fetch("http://127.0.0.1:5000/result")
       .then((res) => res.json())
       .then((data) => {
-        setScore(data.score);
-        console.log(data);
+        setFinalVerdict(data);
+        setscore(data.score);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -46,21 +47,40 @@ const Result = (randomId) => {
             <h1 class="dashboard__header">Your Result</h1>
             <div class="dashboard__score">
               <h2 id="score-number" class="score-number">
-                {score}
+                {finalverdict.score}
               </h2>
               <p class="score-text">of 10</p>
             </div>
             <div class="dashboard__grade">
-              <h2 class="grade-text">Great</h2>
+              <h2 class="grade-text"></h2>
               <h3 class="grade-description">
-                You scored higher than 65% of the people who have taken these
-                tests.
+                
               </h3>
             </div>
           </div>
           <div class="summary">
             <h1 class="summary__header">Summary</h1>
-            <div id="summary__category"></div>
+            <div id="summary__category">
+              Based on the evaluation of your resume and skill assessment, we
+              have determined that you have achieved a{" "}
+              {finalverdict.candidate_score}% match.
+              <div style={{height:"30px"}}></div>
+              {finalverdict.selection === true ? (
+                <div>
+                  Therefore, we are pleased to inform you that we have decided
+                  to proceed with your application. You will soon receive an
+                  email from us detailing the next steps of the selection
+                  process.
+                </div>
+              ) : (
+                <div>
+                  Regrettably, after careful consideration, we have decided not
+                  to proceed further with your application. However, we would
+                  like to extend our best wishes to you for all your future
+                  endeavors.
+                </div>
+              )}
+            </div>
             <button class="continue" type="button">
               Continue
             </button>
