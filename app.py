@@ -171,7 +171,7 @@ class app_class:
             result_data = {'score': self.correct_answer,'selection':selection,'candidate_score':candidate_score}
             return jsonify(result_data)
         # app.run(debug=False)
-        serve(app, host='127.0.0.1', port=5000)
+        serve(app, host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
