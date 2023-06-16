@@ -11,6 +11,7 @@ import multiprocessing
 import os
 import sys
 from dotenv import load_dotenv
+from waitress import serve
 
 load_dotenv()
 MONGODB_URL = os.getenv('MONGODB_URL')
@@ -45,7 +46,7 @@ def scraping(links):
             links['process_error'] = e
             return
         
-class app:
+class app_class:
     def __init__(self) -> None:
         self.resume = None
         self.correct_answer = 0
@@ -169,9 +170,10 @@ class app:
                 print(candidate_score, '%\n', selection)
             result_data = {'score': self.correct_answer,'selection':selection,'candidate_score':candidate_score}
             return jsonify(result_data)
-        app.run(debug=False)
+        # app.run(debug=False)
+        serve(app, host='127.0.0.1', port=5000)
 
 
 if __name__ == '__main__':
-    ap = app()
+    ap = app_class()
     ap.run_flask_app()
