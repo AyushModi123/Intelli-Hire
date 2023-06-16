@@ -71,7 +71,7 @@ class app_class:
             return False, final_grade 
     def run_flask_app(self):
         app = Flask(__name__)
-        cors = CORS(app, origins='http://localhost:3000', supports_credentials=True, expose_headers=['Content-Type'])
+        cors = CORS(app, origins='*', supports_credentials=True, expose_headers=['Content-Type'])
         app.secret_key = APP_SECRET_KEY
         mongodb_url = MONGODB_URL
         try:
