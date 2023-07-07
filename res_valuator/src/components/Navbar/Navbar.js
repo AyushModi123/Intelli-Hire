@@ -9,6 +9,12 @@ function Navbar() {
   const [sidebar, setSidebar] = useState(false);
 
   const showSidebar = () => setSidebar(!sidebar);
+  const user = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location = "/";
+  };
 
   return (
     <>
@@ -20,9 +26,16 @@ function Navbar() {
           <Link to="/" className="menu-bars">
             <button className="btn-home">HOME</button>
           </Link>
-          <Link to="/abou" className="menu-bars">
-            <button className="btn-home">ABOUT</button>
+          <Link to="/about" className="menu-bars">
+            <button className="btn-home">About</button>
           </Link>
+          {user !== null && user !== "" && (
+            <Link to="/" className="menu-bars">
+              <button className="btn-home" onClick={handleLogout}>
+                Logout
+              </button>
+            </Link>
+          )}
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
           <ul className="nav-menu-items" onClick={showSidebar}>

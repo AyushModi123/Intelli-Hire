@@ -6,6 +6,10 @@ import Result from "./components/result";
 import MyParticleElement from "./components/MyParticle";
 import Navbar from "./components/Navbar/Navbar";
 import UnknownTerritory from "./components/errorpg";
+import Signup from "./components/signup/signup";
+import Login from "./components/login/Login";
+import Dashboard from "./components/dashboard/dashboard";
+
 
 function App() {
   const generateRandomId = () => {
@@ -16,10 +20,14 @@ function App() {
   return (
     <div className="app">
       <BrowserRouter>
-        <MyParticleElement />
+        {/* <MyParticleElement /> */}
         <Navbar />
         <Routes>
-          <Route path="/" element={<Upload randomId={randomId} />} />
+          <Route path="/" element={<Login/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/signup" element={<Signup/>}/>
+          <Route path="/:id" element={<Upload randomId={randomId} />} />
           <Route
             path={`/quiz/${randomId}`}
             element={<Quiz randomId={randomId} />}
@@ -28,7 +36,7 @@ function App() {
           <Route path="*" element={<Navigate to="/unknown-territory" />} />
           <Route path="/unknown-territory" element={<UnknownTerritory />} />
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter> 
     </div>
   );
 }

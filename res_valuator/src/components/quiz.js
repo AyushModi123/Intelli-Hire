@@ -9,7 +9,7 @@ const Quiz = ({ randomId }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`https://intelli-hire.onrender.com/quiz/${randomId}`)
+    fetch(`http://127.0.0.1:5000/quiz/${randomId}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data);
@@ -48,7 +48,7 @@ const Quiz = ({ randomId }) => {
 
   const handleSubmit = () => {
     const scoreData = { score };
-    fetch(`https://intelli-hire.onrender.com/quiz/${randomId}`, {
+    fetch(`http://127.0.0.1:5000/quiz/${randomId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const Quiz = ({ randomId }) => {
 
   return (
     <>
-      <div class="nine" style={{ padding: "40px" }}>
+      <div className="nine" style={{ padding: "40px" }}>
         <h1>
           Skill Assessment
           <span>Unlock Your Potential: Discover, Develop, Excel!</span>

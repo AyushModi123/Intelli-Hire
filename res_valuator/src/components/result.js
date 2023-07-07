@@ -20,7 +20,7 @@ const Result = (randomId) => {
   }, [navigate]);
 
   useEffect(() => {
-    fetch("https://intelli-hire.onrender.com/result")
+    fetch("http://127.0.0.1:5000/result")
       .then((res) => res.json())
       .then((data) => {
         setFinalVerdict(data);
