@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect, session,js
 from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, create_refresh_token,  get_jwt
 import bcrypt
-from waitress import serve
+# from waitress import serve
 from flask_cors import CORS
 
 

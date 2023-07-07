@@ -9,6 +9,7 @@ import UnknownTerritory from "./components/errorpg";
 import Signup from "./components/signup/signup";
 import Login from "./components/login/Login";
 import Dashboard from "./components/dashboard/dashboard";
+import JobDetails from "./components/dashboard/jobDetails";
 
 
 function App() {
@@ -26,8 +27,9 @@ function App() {
           <Route path="/" element={<Login/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/dashboard/:jobId" element={<JobDetails/>}/>
           <Route path="/signup" element={<Signup/>}/>
-          <Route path="/:id" element={<Upload randomId={randomId} />} />
+          <Route path="/job/:id" element={<Upload randomId={randomId} />} />
           <Route
             path={`/quiz/${randomId}`}
             element={<Quiz randomId={randomId} />}
