@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, create_refresh_token,  get_jwt
 import bcrypt
 from waitress import serve
-
+from bson import ObjectId
 
 app = Flask(__name__)
 app.secret_key = "testing"
@@ -14,9 +14,11 @@ def MongoDB():
     db_records = client.get_database('records')
     employer_records = db_records.employer
     applicant_records = db_records.applicant
-    return employer_records, applicant_records
+    jd_records = db_records.jd
+    result_records = db_records.result
+    return employer_records, applicant_records, jd_records, result_records
 
-employer_records, applicant_records = MongoDB()
+employer_records, applicant_records, jd_records, result_records = MongoDB()
 
 # Configure Flask JWT Extended
 app.config["JWT_SECRET_KEY"] = "secret_key"
@@ -115,6 +117,26 @@ def logout():
         return render_template("signout.html")
     else:
         return redirect(url_for("login"))
+
+@app.route('/login/<r_id>/dashboard', methods=["POST", "GET"])
+def dashboard(r_id):
+    if request.method == "POST":
+        data = request.get_json()
+        j_id = jd_records.insert_one(data).inserted_id
+        return str(j_id)
+    if request.method == 'GET':
+        jds = []
+        for x in jd_records.find({},{"_id":0, "jd":1, "weights":1, "r_id": r_id }):
+            jds.append(x)
+        return jsonify(jds)
+
+# @app.route('/<j_id>', methods=["GET"])
+# def job(j_id):
+#     if request.method == 'GET':
+#         return jsonify(jd_records.find_one({"_id":j_id }))
+
+            
+
 
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=5000)
