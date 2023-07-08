@@ -16,9 +16,11 @@ def MongoDB():
     db_records = client.get_database('records')
     employer_records = db_records.employer
     applicant_records = db_records.applicant
-    return employer_records, applicant_records
+    jd_records = db_records.jd
+    result_records = db_records.result
+    return employer_records, applicant_records, jd_records, result_records
 
-employer_records, applicant_records = MongoDB()
+employer_records, applicant_records, jd_records, result_records = MongoDB()
 
 # Configure Flask JWT Extended
 app.config["JWT_SECRET_KEY"] = "secret_key"
@@ -86,6 +88,23 @@ def login():
             message = 'Email not found'
             return  {'message': 'This email does not exists in the database'}, 401
 
+@app.route('/dashboard/<r_id>', methods=["POST", "GET"])
+def dashboard(r_id):
+    if request.method == "POST":
+        data = request.get_json()
+        j_id = jd_records.insert_one(data).inserted_id
+        return str(j_id)
+    if request.method == 'GET':
+        jds = []
+        for x in jd_records.find({},{"_id":1, "jd":1, "weights":1, "r_id": r_id }):
+            jds.append(x)
+        return jsonify(jds)
+
+# @app.route('/job/<j_id>', methods=["POST", "GET"])
+# def job(j_id):
+
+
+    
 if __name__ == "__main__":
     # serve(app, host='0.0.0.0', port=5000)
     app.run(port=5001)

@@ -52,6 +52,7 @@ class app_class:
         self.correct_answer = 0
         self.result = {'Education':0, 'Experience':'Very Bad', 'Skills':'Very Bad', 'Projects':'Very Bad', 'Achievements':'Very Bad', 'Coding Profile(s)':0, 'Test Score':0}  
         self.thread_error = None
+        self.applicant_details = None
     def final_verdict(self, threshold=60):
         gradestoscore = {'Very Bad':0, 'Bad':1, 'Moderate':2, 'Good':3, 'Very Good':4, 'Excellent':5}
         score_result = self.result.copy() 
@@ -64,7 +65,7 @@ class app_class:
             assert 0 <= threshold <= 100, "Value must be between 0 and 100(inclusive)"
         except Exception as e:
             print(e)
-            return -1
+            return False, -1
         if final_grade>=threshold:
             return True, final_grade 
         else:
@@ -79,7 +80,9 @@ class app_class:
         except Exception as e:
             print(e)
             return
-        db = client['test']
+        db_test = client['test']
+        db_records = client.get_database('records')
+        applicant_records = db_records.applicant
         manager = multiprocessing.Manager()
         links = manager.dict()
         links['links'] = (None, None, None, None)
@@ -119,6 +122,12 @@ class app_class:
                 sys.exit(thread_id)
         global thread1 
         global p
+        @app.route('/details', methods=['POST'])
+        def details():
+            if request.method == 'POST':
+                self.applicant_details = request.get_json()
+                return {'message': 'Details submitted successfully'}
+
         @app.route('/upload', methods=['GET', 'POST'])
         def upload():
             if request.method == 'POST':
@@ -132,7 +141,7 @@ class app_class:
                 p.start()
                 return {'message': 'Resume uploaded successfully.'}
         def get_questions_from_collection(collection_name, limit):
-            collection = db[collection_name]
+            collection = db_test[collection_name]
             total_questions = collection.count_documents({})
             if total_questions <= limit:
                 questions = list(collection.find())
@@ -169,9 +178,14 @@ class app_class:
             if candidate_score>0:
                 print(candidate_score, '%\n', selection)
             result_data = {'score': self.correct_answer,'selection':selection,'candidate_score':candidate_score}
+            status = 'Reject'
+            if selection:
+                status = 'Interview'
+            applicant_data = { 'name': self.applicant_details['name'], 'email': self.applicant_details['email'], 'phone': self.applicant_details['phone'], 'status': status, 'candidate_score':candidate_score }
+            applicant_records.insert_one(applicant_data)
             return jsonify(result_data)
         app.run(debug=False)
-        serve(app, host='0.0.0.0', port=5000)
+        # serve(app, host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':

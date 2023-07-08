@@ -126,7 +126,7 @@ def dashboard(r_id):
         return str(j_id)
     if request.method == 'GET':
         jds = []
-        for x in jd_records.find({},{"_id":0, "jd":1, "weights":1, "r_id": r_id }):
+        for x in jd_records.find({},{"_id":1, "jd":1, "weights":1, "r_id": r_id }):
             jds.append(x)
         return jsonify(jds)
 
