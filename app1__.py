@@ -105,7 +105,7 @@ def dashboard(r_id):
 def job(j_id):
     if request.method == 'GET':
         job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1})
-        applicant_details = applicant_records.find_one({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1})
+        applicant_details = applicant_records.find_one({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1, "candidate_score":1, "status":1})
         del job_details['_id']
         del applicant_details['_id']
         return jsonify(job_details | applicant_details)
