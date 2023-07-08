@@ -1,15 +1,16 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import Upload from "./components/upload";
-import Quiz from "./components/quiz";
-import Result from "./components/result";
-import MyParticleElement from "./components/MyParticle";
+import Upload from "./components/candidate/upload";
+import Quiz from "./components/candidate/quiz";
+import Result from "./components/candidate/result";
+import MyParticleElement from "./components/candidate/MyParticle";
 import Navbar from "./components/Navbar/Navbar";
 import UnknownTerritory from "./components/errorpg";
 import Signup from "./components/signup/signup";
 import Login from "./components/login/Login";
 import Dashboard from "./components/dashboard/dashboard";
 import JobDetails from "./components/dashboard/jobDetails";
+import Home from "./components/home/home";
 
 
 function App() {
@@ -22,9 +23,11 @@ function App() {
     <div className="app">
       <BrowserRouter>
         {/* <MyParticleElement /> */}
-        <Navbar />
+        <div className="gradient__bg">
+           <Navbar/>
+        </div>
         <Routes>
-          <Route path="/" element={<Login/>}/>
+          <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/dashboard/:jobId" element={<JobDetails/>}/>

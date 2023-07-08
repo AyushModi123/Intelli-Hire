@@ -33,8 +33,8 @@ const Login = () => {
 		<div className={styles.login_container}>
 			<div className={styles.login_form_container}>
 				<div className={styles.left}>
+				<h1 style={{color:"white"}}className={styles.login_header}>Login to Your Account</h1>
 					<form className={styles.form_container} onSubmit={handleSubmit}>
-						<h1>Login to Your Account</h1>
 						<input
 							type="email"
 							placeholder="Email"
@@ -58,14 +58,6 @@ const Login = () => {
 							Sign In
 						</button>
 					</form>
-				</div>
-				<div className={styles.right}>
-					<h1>New Here ?</h1>
-					<Link to="/signup">
-						<button type="button" className={styles.white_btn}>
-							SignUp
-						</button>
-					</Link>
 				</div>
 			</div>
 		</div>
