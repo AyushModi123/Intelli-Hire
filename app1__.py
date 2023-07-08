@@ -73,7 +73,7 @@ def login():
         password = data.get("password")
 
         email_found = employer_records.find_one({"email": email})
-        if email_found:
+        if email_found != None:
             email_val = email_found['email']
             passwordcheck = email_found['password']
 
@@ -84,7 +84,7 @@ def login():
                 return jsonify(access_token)
         else:
             message = 'Email not found'
-            return  {'message': 'This email does not exists in the database'}
+            return  {'message': 'This email does not exists in the database'}, 401
 
 if __name__ == "__main__":
     # serve(app, host='0.0.0.0', port=5000)

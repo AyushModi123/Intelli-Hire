@@ -14,36 +14,40 @@ const JobDetails = () => {
         ],
     }
     return (
-        <div className="job-details">
-            <h3>Job Details</h3>
-            <p>{job.jobDesc}</p>
-            <p>
+        <div style={{marginLeft:'40px'}}>
+            <h3 style={{ color: '#fff' }}>Job Details</h3>
+            <p style={{ color: '#fff' }}>{job.jobDesc}</p>
+            <p style={{ color: '#fff' }}>
                 <a href={job.jobUrl} target="_blank" rel="noopener noreferrer">
                     Job URL
                 </a>
             </p>
 
-            <h3>Candidates</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {job.candidates.map((candidate, index) => (
-                        <tr key={index}>
-                            <td>{candidate.name}</td>
-                            <td>{candidate.email}</td>
-                            <td>{candidate.phone}</td>
-                            <td>{candidate.status}</td>
+            
+            <div style={{display:'flex',flexDirection:'column', justifyContent:'center'}}>
+            <h3 style={{ color: '#fff' }}>Candidates</h3>
+                <table style={{ color: '#fff', width: '70%' }}>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {job.candidates.map((candidate, index) => (
+                            <tr key={index}>
+                                <td>{candidate.name}</td>
+                                <td>{candidate.email}</td>
+                                <td>{candidate.phone}</td>
+                                <td>{candidate.status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     );
 };

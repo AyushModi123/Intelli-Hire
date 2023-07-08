@@ -25,11 +25,11 @@
 // }
 
 // export default Dashboard
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './dashboard.css'; // Import the CSS file
 import JobDetails from './jobDetails';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([
@@ -58,7 +58,14 @@ const Dashboard = () => {
   ]);
 
   const [selectedJob, setSelectedJob] = useState(null);
+  const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if(!token){
+  //     navigate("/login");
+  //   }
+  // },[])
   const handleCardClick = (job) => {
     setSelectedJob(job);
   };
@@ -86,7 +93,6 @@ const Dashboard = () => {
               <p>Job ID: {job.jobId}</p>
               <p>Status: {job.status}</p>
               <div className="actions">
-                <button onClick={(e) => handleEdit(job)}>Edit</button>
                 <button onClick={(e) => handleDelete(job)}>Delete</button>
               </div>
             </div>
