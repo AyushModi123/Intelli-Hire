@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 import bcrypt
 # from waitress import serve
 from flask_cors import CORS
+from bson import ObjectId
 
 
 app = Flask(__name__)
@@ -96,14 +97,18 @@ def dashboard(r_id):
         return str(j_id)
     if request.method == 'GET':
         jds = []
-        for x in jd_records.find({},{"_id":1, "jd":1, "weights":1, "r_id": r_id }):
+        for x in jd_records.find({},{"_id":0, "jd":1, "weights":1, "r_id": r_id }):
             jds.append(x)
         return jsonify(jds)
 
-# @app.route('/job/<j_id>', methods=["POST", "GET"])
-# def job(j_id):
-
-
+@app.route('/job/<j_id>', methods=["POST", "GET"])
+def job(j_id):
+    if request.method == 'GET':
+        job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1})
+        applicant_details = applicant_records.find_one({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1})
+        del job_details['_id']
+        del applicant_details['_id']
+        return jsonify(job_details | applicant_details)
     
 if __name__ == "__main__":
     # serve(app, host='0.0.0.0', port=5000)

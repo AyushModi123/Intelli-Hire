@@ -181,7 +181,7 @@ class app_class:
             status = 'Reject'
             if selection:
                 status = 'Interview'
-            applicant_data = { 'name': self.applicant_details['name'], 'email': self.applicant_details['email'], 'phone': self.applicant_details['phone'], 'status': status, 'candidate_score':candidate_score }
+            applicant_data = {'j_id': str(j_id), 'name': self.applicant_details['name'], 'email': self.applicant_details['email'], 'phone': self.applicant_details['phone'], 'status': status, 'candidate_score':candidate_score }
             applicant_records.insert_one(applicant_data)
             return jsonify(result_data)
         app.run(debug=False, port=5000)
