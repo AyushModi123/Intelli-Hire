@@ -3,17 +3,22 @@ from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, create_refresh_token,  get_jwt
 import bcrypt
 # from waitress import serve
+import os
 from flask_cors import CORS
 from bson import ObjectId
+from dotenv import load_dotenv
+load_dotenv()
 
-
+MONGODB_URL = os.getenv('MONGODB_URL')
+APP_SECRET_KEY = os.getenv('APP_SECRET_KEY')
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 app = Flask(__name__)
 cors = CORS(app, origins='*', supports_credentials=True, expose_headers=['Content-Type'])
-app.secret_key = "testing"
+app.secret_key = APP_SECRET_KEY
 
 # Connect to your MongoDB database
 def MongoDB():
-    client = MongoClient("mongodb+srv://admin:1234@cluster0.o0dcqvb.mongodb.net/?retryWrites=true&w=majority")
+    client = MongoClient(MONGODB_URL)
     db_records = client.get_database('records')
     employer_records = db_records.employer
     applicant_records = db_records.applicant
@@ -24,7 +29,7 @@ def MongoDB():
 employer_records, applicant_records, jd_records, result_records = MongoDB()
 
 # Configure Flask JWT Extended
-app.config["JWT_SECRET_KEY"] = "secret_key"
+app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 jwt = JWTManager(app)
 
 # Routes
@@ -62,12 +67,10 @@ def login():
         data = request.get_json()
         email = data.get("email")
         password = data.get("password")
-
         email_found = employer_records.find_one({"email": email})
         if email_found != None:
             email_val = email_found['email']
             passwordcheck = email_found['password']
-
             if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
                 session["email"] = email_val
                 access_token = create_access_token(identity=email, fresh=True)            
