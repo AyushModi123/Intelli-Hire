@@ -53,14 +53,15 @@ class app_class:
         self.result = {'Education':0, 'Experience':'Very Bad', 'Skills':'Very Bad', 'Projects':'Very Bad', 'Achievements':'Very Bad', 'Coding Profile(s)':0, 'Test Score':0}  
         self.thread_error = None
         self.applicant_details = None
-    def final_verdict(self, threshold=60):
+        self.job_details = None
+    def final_verdict(self, weights=[1, 1, 1, 1, 1, 1, 1], threshold=60):
         gradestoscore = {'Very Bad':0, 'Bad':1, 'Moderate':2, 'Good':3, 'Very Good':4, 'Excellent':5}
         score_result = self.result.copy() 
         for key in self.result.keys():
             if not (key == 'Test Score' or key == 'Coding Profile(s)' or key == 'Education'):
                 score_result[key] = gradestoscore[self.result[key]]          
-        final_grade = score_result['Education']*2 + score_result['Experience']*4.5 + score_result['Skills']*2 + score_result['Projects']*3.8 + score_result['Achievements']*1.7 + score_result['Coding Profile(s)']*1.5 + score_result['Test Score']*2.7
-        final_grade=round((final_grade*100)/91,2)
+        final_grade = score_result['Education']*weights[0] + score_result['Experience']*weights[1] + score_result['Skills']*weights[2] + score_result['Projects']*weights[3] + score_result['Achievements']*weights[4] + score_result['Coding Profile(s)']*weights[5] + score_result['Test Score']*weights[6]
+        final_grade=round((final_grade/40)*100, 2)
         try:
             assert 0 <= threshold <= 100, "Value must be between 0 and 100(inclusive)"
         except Exception as e:
@@ -83,6 +84,7 @@ class app_class:
         db_test = client['test']
         db_records = client.get_database('records')
         applicant_records = db_records.applicant
+        jd_records = db_records.jd
         manager = multiprocessing.Manager()
         links = manager.dict()
         links['links'] = (None, None, None, None)
@@ -102,13 +104,7 @@ class app_class:
             links['fetched'] = True
             # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245', None)
             # print(links['links'])
-            jd = '''1. Collaborate with the development team to understand project requirements and objectives
-2. Assist in designing, coding, and testing web applications using the MERN stack
-3. Implement and maintain front-end components using React.js
-4. Develop and integrate backend APIs using Node.js and Express.js or Laravel (PHP)
-5. Work with APIs and utilize Postman for testing and integration
-6. Self-handle E2E approach
-7. Work on Firebase to frontend and backend'''
+            jd = self.job_details['jd']
             self.thread_error = de.jd_comparator(jd)
             if self.thread_error:
                 thread_id = threading.get_ident()
@@ -122,14 +118,18 @@ class app_class:
                 sys.exit(thread_id)
         global thread1 
         global p
-        @app.route('/details', methods=['POST'])
-        def details():
+        @app.route('/job/<j_id>/details', methods=['GET', 'POST'])
+        def details(j_id):
+            if request.method == 'GET':
+                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1})
+                print(self.job_details)
+                return {'message': 'DOne'}
             if request.method == 'POST':
                 self.applicant_details = request.get_json()
                 return {'message': 'Details submitted successfully'}
 
-        @app.route('/upload', methods=['GET', 'POST'])
-        def upload():
+        @app.route('/job/<j_id>/upload', methods=['GET', 'POST'])
+        def upload(j_id):
             if request.method == 'POST':
                 self.resume = request.files['resume']
                 self.resume.save(self.resume.filename)
@@ -150,8 +150,8 @@ class app_class:
             return questions[:limit]
         aptitude_questions = get_questions_from_collection('aptitude', 10)
         questions =  aptitude_questions
-        @app.route('/quiz/<id>', methods=['GET', 'POST'])
-        def quiz(id):
+        @app.route('/job/<j_id>/quiz', methods=['GET', 'POST'])
+        def quiz(j_id):
             if request.method == 'POST':
                 score = request.get_json()['score']
                 self.correct_answer = int(score)
@@ -159,8 +159,8 @@ class app_class:
             if request.method == 'GET':
                 serialized_questions = [json.loads(json.dumps(q, default=str)) for q in questions]
                 return jsonify(serialized_questions)
-        @app.route('/result', methods=['GET'])
-        def result():
+        @app.route('/job/<j_id>/result', methods=['GET'])
+        def result(j_id):
             global thread1
             thread1.join()
             global p
@@ -174,7 +174,7 @@ class app_class:
             self.result['Test Score'] = self.correct_answer
             self.result['Coding Profile(s)'] = links['Coding Profile(s)']
             print(self.result)
-            selection, candidate_score = self.final_verdict()
+            selection, candidate_score = self.final_verdict(self.job_details['weights'])
             if candidate_score>0:
                 print(candidate_score, '%\n', selection)
             result_data = {'score': self.correct_answer,'selection':selection,'candidate_score':candidate_score}
@@ -184,7 +184,7 @@ class app_class:
             applicant_data = { 'name': self.applicant_details['name'], 'email': self.applicant_details['email'], 'phone': self.applicant_details['phone'], 'status': status, 'candidate_score':candidate_score }
             applicant_records.insert_one(applicant_data)
             return jsonify(result_data)
-        app.run(debug=False)
+        app.run(debug=False, port=5000)
         # serve(app, host='0.0.0.0', port=5000)
 
 
