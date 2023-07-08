@@ -30,7 +30,7 @@ jwt = JWTManager(app)
 # Routes
 
 @app.route("/signup", methods=['POST', 'GET'])
-def index():
+def signup():
     message = ''
     if request.method == "POST":
         data = request.get_json()
@@ -39,32 +39,20 @@ def index():
         employer = data.get("employer")
         password1 = data.get("password1")
         password2 = data.get("password2")
-
-        if not user or not email or not employer or not password1 or not password2:
-            message = 'Please fill in all the fields'
+        if not user or not email or not employer or not password1 or not password2:            
             return {'message': 'Please fill in all the fields'}
-
-        if password1 != password2:
-            message = 'Passwords do not match'
+        if password1 != password2:        
             return {'message': 'Passwords do not match'}
-
-        email_found = employer_records.find_one({"email": email})
-
+        email_found = employer_records.find_one({"email": email})        
         if email_found:
-            message = 'This email already exists in the database'
             return {'message': 'This email already exists in the database'}
         else:
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
             user_input = {'name': user, 'employer': employer, 'email': email, 'password': hashed}
             employer_records.insert_one(user_input)
-
-            user_data = employer_records.find_one({"email": email})
-            new_email = user_data['email']
-
-            # Create access token and refresh token
+            # user_data = employer_records.find_one({"email": email})
+            # new_email = user_data['email']
             access_token = create_access_token(identity=email, fresh=True)
-            refresh_token = create_refresh_token(identity=email)
-
             return jsonify(access_token)
 
 @app.route("/login", methods=["POST", "GET"])
@@ -82,14 +70,14 @@ def login():
 
             if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
                 session["email"] = email_val
-                access_token = create_access_token(identity=email)
-                refresh_token = create_refresh_token(identity=email)
+                access_token = create_access_token(identity=email, fresh=True)            
                 return jsonify(access_token)
         else:
             message = 'Email not found'
             return  {'message': 'This email does not exists in the database'}, 401
 
 @app.route('/dashboard/<r_id>', methods=["POST", "GET"])
+@jwt_required(fresh=True)  
 def dashboard(r_id):
     if request.method == "POST":
         data = request.get_json()
@@ -100,8 +88,9 @@ def dashboard(r_id):
         for x in jd_records.find({},{"_id":0, "jd":1, "weights":1, "r_id": r_id }):
             jds.append(x)
         return jsonify(jds)
-
+    
 @app.route('/job/<j_id>', methods=["POST", "GET"])
+@jwt_required(fresh=True)  
 def job(j_id):
     if request.method == 'GET':
         job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1})
