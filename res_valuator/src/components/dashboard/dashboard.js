@@ -1,34 +1,6 @@
-// import React, { useEffect, useState } from "react";
-// const Dashboard = () => {
-//     const [data, setData] = useState({
-//         jd: "",/*same names as in db*/
-//         weights: [],
-//         employer: "",
-//         password1: "",
-//         password2: "",
-//       });
-//       const handleChange = ({ currentTarget: input }) => {
-//         setData({ ...data, [input.name]: input.value });
-//       };  
-//   return (
-//     <div>
-//       <h1 style={{color:"white"}}>Dashboard</h1>
-//       <input
-//        type="text"
-//        placeholder="Enter JD"
-//        name="jd"
-//        value={data.jd}
-//        onChange={handleChange} 
-//       />
-//     </div>
-//   )
-// }
-
-// export default Dashboard
 import React, { useEffect, useState } from 'react';
 
 import './dashboard.css'; // Import the CSS file
-import JobDetails from './jobDetails';
 import { Link, useNavigate } from 'react-router-dom';
 import AddJobModal from './AddJobModal';
 
@@ -66,7 +38,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container dcntr">
       <h2>Job Dashboard</h2>
       <button className='add-new' onClick={() => setIsOpen(true)} style={buttonStyle}><span>Add New Job</span><i></i></button>
       <div className="card-container">

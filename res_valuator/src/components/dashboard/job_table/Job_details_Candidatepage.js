@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import JobDescriptionCard from './card'
 import BasicTable from './table'
 
-const MainCandidatepage = () => {
+const JobDetailsPage = () => {
   const [details, setDetails] = useState('');
 
   const url = window.location.href;
@@ -33,4 +33,4 @@ const MainCandidatepage = () => {
   )
 }
 
-export default MainCandidatepage
+export default JobDetailsPage;

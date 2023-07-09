@@ -9,10 +9,9 @@ import UnknownTerritory from "./components/errorpg";
 import Signup from "./components/signup/signup";
 import Login from "./components/login/Login";
 import Dashboard from "./components/dashboard/dashboard";
-import JobDetails from "./components/dashboard/jobDetails";
 import Home from "./components/home/home";
-import MainCandidatepage from "./components/dashboard/job_table/Job_details_Candidatepage";
 import ApplicantDetails from "./components/candidate/candidate_detail";
+import JobDetailsPage from "./components/dashboard/job_table/Job_details_Candidatepage";
 
 
 function App() {
@@ -32,7 +31,7 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/dashboard/:jobId" element={<MainCandidatepage/>}/>
+          <Route path="/dashboard/:jobId" element={<JobDetailsPage/>}/>
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/job/:id" element={<ApplicantDetails/>} />
           <Route path="/upload/:id" element={<Upload randomId={randomId}/>}/>

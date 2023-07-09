@@ -48,9 +48,13 @@ export default function BasicTable({details}) {
                 <TableCell>Candidate Name </TableCell>
                 <TableCell align="left">Email</TableCell>
                 <TableCell align="left">Test Score</TableCell>
+                <TableCell align="left">Education</TableCell>
                 <TableCell align="left">Projects</TableCell>
                 <TableCell align="left">Experience</TableCell>
                 <TableCell align="left">Skills</TableCell>
+                <TableCell align="left">Achievements</TableCell>
+                <TableCell align="left">Coding Profiles</TableCell>
+                <TableCell align="left">Test Score</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ color: "white" }}>
@@ -67,9 +71,13 @@ export default function BasicTable({details}) {
                   </TableCell>
                   <TableCell align="left">{row.email}</TableCell>
                   <TableCell align="left">{row.candidate_score} %</TableCell>
+                  <TableCell align="left">{row.Education}</TableCell>
                   <TableCell align="left">{row.Projects}</TableCell>
                   <TableCell align="left">{row.Experience}</TableCell>
                   <TableCell align="left">{row.Skills}</TableCell>
+                  <TableCell align="left">{row.Achievements}</TableCell>
+                  <TableCell align="left">{row["Coding Profile(s)"]}</TableCell>
+                  <TableCell align="left">{row["Test Score"]}</TableCell>
                   {/* <TableCell align="left" className="Details">{row.}</TableCell> */}
                 </TableRow>
               ))}

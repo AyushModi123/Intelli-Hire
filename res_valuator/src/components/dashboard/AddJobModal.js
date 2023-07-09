@@ -15,6 +15,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
         skills: '',
         projects: '',
         achievements: '',
+        coding_profiles: '',
         testScore: '',
     }
     const [formData, setFormData] = useState(initialState);
@@ -32,6 +33,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                 formData.skills / 10,
                 formData.projects / 10,
                 formData.achievements / 10,
+                formData.coding_profiles / 10,
                 formData.testScore / 10
             ],
             status: 'Active', r_id
@@ -158,6 +160,19 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                                         onChange={handleInputChange}
                                     />
                                     <span>{formData.achievements}</span>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="projects">Coding Profiles:</label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="10"
+                                        id="coding_profiles"
+                                        name="coding_profiles"
+                                        value={formData.coding_profiles}
+                                        onChange={handleInputChange}
+                                    />
+                                    <span>{formData.coding_profiles}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="testScore">Test Score:</label>
