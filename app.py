@@ -116,7 +116,7 @@ class app_class:
                 sys.exit(thread_id)
         global thread1 
         global p
-        @app.route('/job/<j_id>/details', methods=['GET', 'POST'])
+        @app.route('/job/<j_id>', methods=['GET', 'POST'])
         def details(j_id):
             if request.method == 'GET':
                 self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, 'weights':1, "job_title":1, "status":1})
