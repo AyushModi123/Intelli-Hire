@@ -22,7 +22,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function JobDescriptionCard({details}) {
+export default function JobDescriptionCard({details, j_id}) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -42,7 +42,8 @@ export default function JobDescriptionCard({details}) {
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="share">
-          <ShareIcon />
+          <ShareIcon /> 
+          <p onClick={() =>  { navigator.clipboard.writeText(`http://localhost:3000/job/${j_id}`);  alert("Link Copied ")}} style={{marginLeft:'10px', fontSize:'15px'}}>http://localhost:3000/job/{j_id}</p>
         </IconButton>
         <ExpandMore
           expand={expanded}

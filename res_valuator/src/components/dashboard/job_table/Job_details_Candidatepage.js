@@ -27,7 +27,7 @@ const MainCandidatepage = () => {
 
   return (
     <div>
-      <JobDescriptionCard details={details}/>
+      <JobDescriptionCard details={details} j_id={j_id}/>
       <BasicTable details={details}/>
     </div>
   )

@@ -66,7 +66,7 @@ export default function BasicTable({details}) {
                     {row.name}
                   </TableCell>
                   <TableCell align="left">{row.email}</TableCell>
-                  <TableCell align="left">{row.candidate_score}</TableCell>
+                  <TableCell align="left">{row.candidate_score} %</TableCell>
                   <TableCell align="left">{row.Projects}</TableCell>
                   <TableCell align="left">{row.Experience}</TableCell>
                   <TableCell align="left">{row.Skills}</TableCell>
