@@ -7,7 +7,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
     const [flag, setFlag] = useState(false);
     const [jobId, setJobId] = useState('');
 
-    const [formData, setFormData] = useState({
+    const initialState = {
         job_title: '',
         jobDesc: '',
         education: '',
@@ -16,7 +16,8 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
         projects: '',
         achievements: '',
         testScore: '',
-    });
+    }
+    const [formData, setFormData] = useState(initialState);
 
     // Create a new FormData object to store the form data
     const handleSubmit = async (event) => {
@@ -41,11 +42,9 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
         console.log(res.status);
         if (res.status === 200) {
             setFlag(true);
-            setJobId(res.data)
+            setJobId(res.data);
+            setFormData(initialState);
         }
-
-        console.log(flag);
-        console.log(jobId);
     };
 
     // Rest of your component code...
@@ -106,6 +105,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                                         value={formData.education}
                                         onChange={handleInputChange}
                                     />
+                                    <span>{formData.education}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="experience">Experience:</label>
@@ -118,6 +118,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                                         value={formData.experience}
                                         onChange={handleInputChange}
                                     />
+                                    <span>{formData.experience}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="skills">Skills:</label>
@@ -130,6 +131,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                                         value={formData.skills}
                                         onChange={handleInputChange}
                                     />
+                                    <span>{formData.skills}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="projects">Projects:</label>
@@ -142,6 +144,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                                         value={formData.projects}
                                         onChange={handleInputChange}
                                     />
+                                    <span>{formData.projects}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="achievements">Achievements:</label>
@@ -154,6 +157,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
                                         value={formData.achievements}
                                         onChange={handleInputChange}
                                     />
+                                    <span>{formData.achievements}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="testScore">Test Score:</label>

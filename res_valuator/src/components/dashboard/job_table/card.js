@@ -22,7 +22,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function JobDescriptionCard() {
+export default function JobDescriptionCard({details}) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -32,20 +32,12 @@ export default function JobDescriptionCard() {
   return (
     <Card sx={{ width:"auto"}}>
       <CardHeader
-        title="UI/UX Developer"
+        title={details?.job_title}
         subheader="July, 2023"
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-Skills Required for a UI/UX Designer Job Soft Skills:
-• Ability to work both in a group and independently
-• Outstanding verbal and written communication abilities
-• Multitasking
-• Time administration
-• A bachelor's degree in design, computer science, or a related field is required.
-• Work experience as a UI/UX designer or in a related role is required.
-• Portfolio of work in UI/UX design for mobile and web platforms.
-• Excellent knowledge of Sketch, InVision, HTML, Visio, iOS, Android, Adobe Creative Suite, and other software.
+          {details?.jd}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -61,32 +53,33 @@ Skills Required for a UI/UX Designer Job Soft Skills:
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
+      {details?.weights ? (
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Weights:</Typography>
           <Typography >
-          Education: 0.4
+          Education: {details?.weights[0]}
           </Typography>
           <Typography>
-          Experience:0.2
+          Experience:{details?.weights[1]}
           </Typography>
           <Typography >
-          Skills:0.5
+          Skills:{details?.weights[2]}
           </Typography>
           <Typography >
-          Projects:0.5
+          Projects:{details?.weights[3]}
           </Typography>
           <Typography >
-          Achievements:0.5
+          Achievements:{details?.weights[4]}
           </Typography>
           <Typography >
-          Coding Profile(s):0.5
+          Coding Profile(s):{details?.weights[5]}
           </Typography>
           <Typography >
-          Test Score:0.5
+          Test Score:{details?.weights[6]}
           </Typography>
         </CardContent>
-      </Collapse>
+      </Collapse>):<></>}
     </Card>
   );
 }

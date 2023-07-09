@@ -1,4 +1,4 @@
-import * as React from "react";
+import {useEffect, useState} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,17 +7,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./table.css";
-
-function createData(Status, CandidateName ,  Email, TestScore,Projects,Experience,Skills) {
-  return { Status, CandidateName , Email, TestScore,Projects, Experience,Skills};
-}
-
-const rows = [
-  createData("Interview","Mike Ross","mikeross@gmail.com","56%", "6", "8","9"),
-  createData("Interview","Sheldon Copper","s.cooperphd@yahoo.com","85%", "9", "8", "9"),
-  createData("Rejected","Joey","joey@gmail.com","11%", "9", "8", "9"),
-  createData("Rejected","Maria Schulz","maria3456@gmail.com","43%", "6", "3", "4"),
-];
 
 
 const makeStyle=(status)=>{
@@ -43,7 +32,8 @@ const makeStyle=(status)=>{
   }
 }
 
-export default function BasicTable() {
+export default function BasicTable({details}) {
+
   return (
       <div className="Table">
       <h3 style={{color:"white"}}>Candidate's Applied</h3>
@@ -64,19 +54,19 @@ export default function BasicTable() {
               </TableRow>
             </TableHead>
             <TableBody style={{ color: "white" }}>
-              {rows.map((row) => (
+              {details?.candidates?.map((row) => (
                 <TableRow
-                  key={row.CandidateName}
+                  key={row.email}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                 <TableCell align="left">
-                    <span className="status" style={makeStyle(row.Status)}>{row.Status}</span>
+                    <span className="status" style={makeStyle(row.status)}>{row.status}</span>
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    {row.CandidateName}
+                    {row.name}
                   </TableCell>
-                  <TableCell align="left">{row.Email}</TableCell>
-                  <TableCell align="left">{row.TestScore}</TableCell>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left">{row.candidate_score}</TableCell>
                   <TableCell align="left">{row.Projects}</TableCell>
                   <TableCell align="left">{row.Experience}</TableCell>
                   <TableCell align="left">{row.Skills}</TableCell>

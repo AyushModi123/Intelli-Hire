@@ -44,14 +44,11 @@ const Dashboard = () => {
     })
       .then(response => response.json())
       .then(data => {
-        // Process the retrieved data
-        console.log(data);
         setJobs(data.data);
         
       })
       .catch(error => {
         console.error('Error:', error);
-        // Handle any errors that occur during the request
       });
   }, []);
 
@@ -77,7 +74,7 @@ const Dashboard = () => {
             <div className="card" key={job._id} >
               <h3>{job.job_title}</h3>
               <p>Status: {job.status}</p>
-              <Link style={{textDecoration:'none', color:'#000'}} to={`/dashboard/${job.jobId}`}>
+              <Link style={{textDecoration:'none', color:'#000'}} to={`/dashboard/${job._id}`}>
                 <button className='job-det' style={{textDecoration:'none',fontSize:'15px',backgroundColor:'#fff',padding:'10px 30px', borderRadius:'20px', fontStyle:'bold'}}>Job Details</button>
               </Link>
             </div>

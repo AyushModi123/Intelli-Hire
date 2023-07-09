@@ -603,9 +603,9 @@ svg.w-6.h-6 {
   transition: backgroundColor .9s ease-in-out;
 }
 
-button:hover {
+/* button:hover {
   background: linear-gradient(180deg, var(--VioletBlue) 0%, var(--persianBlue) 100%);
-}
+} */
 
 @media screen and (max-width: 960px) {
   .dashboard-container {
