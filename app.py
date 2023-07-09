@@ -102,8 +102,6 @@ class app_class:
                 sys.exit(thread_id)
             links['links'] = de.links
             links['fetched'] = True
-            # links['links'] = ('https://auth.geeksforgeeks.org/user/aniketmishra2709/', 'https://codeforces.com/profile/Benq/', 'https://www.codechef.com/users/aniket_1245', None)
-            # print(links['links'])
             jd = self.job_details['jd']
             self.thread_error = de.jd_comparator(jd)
             if self.thread_error:
@@ -121,7 +119,7 @@ class app_class:
         @app.route('/job/<j_id>/details', methods=['GET', 'POST'])
         def details(j_id):
             if request.method == 'GET':
-                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1})
+                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1, "job_title":1})
                 print(self.job_details)
                 return {'message': 'DOne'}
             if request.method == 'POST':

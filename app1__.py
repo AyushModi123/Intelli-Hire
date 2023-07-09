@@ -88,7 +88,7 @@ def dashboard(r_id):
         return str(j_id)
     if request.method == 'GET':
         jds = []
-        for x in jd_records.find({},{"_id":0, "jd":1, "weights":1, "r_id": r_id }):
+        for x in jd_records.find({"r_id": r_id},{"jd":1, "weights":1, "job_title":1}):
             jds.append(x)
         return jsonify(jds)
     
@@ -96,7 +96,7 @@ def dashboard(r_id):
 @jwt_required(fresh=True)  
 def job(j_id):
     if request.method == 'GET':
-        job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1})
+        job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1, "job_title":1})
         applicant_details = applicant_records.find_one({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1, "candidate_score":1, "status":1})
         del job_details['_id']
         del applicant_details['_id']
