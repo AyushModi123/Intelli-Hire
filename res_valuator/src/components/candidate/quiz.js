@@ -9,6 +9,7 @@ const Quiz = ({ randomId }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  console.log(id);
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/job/${id}/quiz`)
       .then((res) => res.json())
