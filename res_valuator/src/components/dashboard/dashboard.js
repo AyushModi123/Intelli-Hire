@@ -33,65 +33,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import AddJobModal from './AddJobModal';
 
 const Dashboard = () => {
-  const [jobs, setJobs] = useState([
-    {
-      jobId: 1,
-      jobTitle: 'Software Engineer',
-      status: 'Active',
-      jobDesc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      jobUrl: 'https://example.com/job1',
-      candidates: [
-        { name: 'John Doe', email: 'john@example.com', phone: '1234567890', status: 'Applied' },
-        { name: 'Jane Smith', email: 'jane@example.com', phone: '9876543210', status: 'Interview' },
-      ],
-    },
-    {
-      jobId: 2,
-      jobTitle: 'UI/UX Designer',
-      status: 'Inactive',
-      jobDesc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      jobUrl: 'https://example.com/job2',
-      candidates: [
-        { name: 'Alice Brown', email: 'alice@example.com', phone: '1111111111', status: 'Offer' },
-        { name: 'Bob Johnson', email: 'bob@example.com', phone: '2222222222', status: 'Rejected' },
-      ],
-    },
-    {
-      jobId: 2,
-      jobTitle: 'UI/UX Designer',
-      status: 'Inactive',
-      jobDesc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      jobUrl: 'https://example.com/job2',
-      candidates: [
-        { name: 'Alice Brown', email: 'alice@example.com', phone: '1111111111', status: 'Offer' },
-        { name: 'Bob Johnson', email: 'bob@example.com', phone: '2222222222', status: 'Rejected' },
-      ],
-    },
-    {
-      jobId: 2,
-      jobTitle: 'UI/UX Designer',
-      status: 'Inactive',
-      jobDesc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      jobUrl: 'https://example.com/job2',
-      candidates: [
-        { name: 'Alice Brown', email: 'alice@example.com', phone: '1111111111', status: 'Offer' },
-        { name: 'Bob Johnson', email: 'bob@example.com', phone: '2222222222', status: 'Rejected' },
-      ],
-    },
-  ]);
+  const [jobs, setJobs] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const r_id = localStorage.getItem("r_id");
-    fetch(`http://127.0.0.1:5001/dashboard/${r_id}`)
-      .then(response => {
-        console.log(response);
-        // Handle the response
+    fetch(`http://127.0.0.1:5001/dashboard/${r_id}`, {
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Process the retrieved data
+        console.log(data);
+        setJobs(data.data);
+        
       })
       .catch(error => {
-        console.error(error)
-        // Handle any errors
+        console.error('Error:', error);
+        // Handle any errors that occur during the request
       });
   }, []);
 
@@ -114,9 +74,8 @@ const Dashboard = () => {
       <button className='add-new' onClick={() => setIsOpen(true)} style={buttonStyle}><span>Add New Job</span><i></i></button>
       <div className="card-container">
         {jobs.map((job) => (
-            <div className="card" key={job.jobId} >
-              <h3>{job.jobTitle}</h3>
-              <p>Job ID: {job.jobId}</p>
+            <div className="card" key={job._id} >
+              <h3>{job.job_title}</h3>
               <p>Status: {job.status}</p>
               <Link style={{textDecoration:'none', color:'#000'}} to={`/dashboard/${job.jobId}`}>
                 <button className='job-det' style={{textDecoration:'none',fontSize:'15px',backgroundColor:'#fff',padding:'10px 30px', borderRadius:'20px', fontStyle:'bold'}}>Job Details</button>
