@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate,useParams } from 'react-router-dom';
 import MyParticleElement from "./MyParticle";
 
 function Upload({ randomId }) {
@@ -7,6 +7,7 @@ function Upload({ randomId }) {
   const [resume, setResume] = useState(null);
   const [hover, setHover] = useState(false);
   const [startassessment, setstartassessment] = useState(false);
+  const { id } = useParams();
 
   const handleResumeUpload = (event) => {
     const uploadedFile = event.target.files[0];
@@ -30,7 +31,7 @@ function Upload({ randomId }) {
       const formData = new FormData();
       formData.append("resume", resume);
 
-      fetch("http://127.0.0.1:5000/upload", {
+      fetch(`http://127.0.0.1:5000/job/${id}/upload`, {
         method: "POST",
         body: formData,
       })

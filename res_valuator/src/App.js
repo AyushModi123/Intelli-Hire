@@ -12,6 +12,7 @@ import Dashboard from "./components/dashboard/dashboard";
 import JobDetails from "./components/dashboard/jobDetails";
 import Home from "./components/home/home";
 import MainCandidatepage from "./components/dashboard/job_table/Job_details_Candidatepage";
+import ApplicantDetails from "./components/candidate/candidate_detail";
 
 
 function App() {
@@ -33,7 +34,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/dashboard/:jobId" element={<MainCandidatepage/>}/>
           <Route path="/signup" element={<Signup/>}/>
-          <Route path="/job/:id" element={<Upload randomId={randomId} />} />
+          <Route path="/job/:id" element={<ApplicantDetails/>} />
+          <Route path="/upload/:id" element={<Upload randomId={randomId}/>}/>
           <Route
             path={`/quiz/${randomId}`}
             element={<Quiz randomId={randomId} />}

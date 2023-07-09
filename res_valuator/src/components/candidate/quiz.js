@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate,useParams } from 'react-router-dom';
 
 const Quiz = ({ randomId }) => {
   const [questions, setQuestions] = useState([]);
@@ -7,9 +7,10 @@ const Quiz = ({ randomId }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(30);
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/quiz/${randomId}`)
+    fetch(`http://127.0.0.1:5000/job/${id}/quiz`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data);
@@ -48,7 +49,7 @@ const Quiz = ({ randomId }) => {
 
   const handleSubmit = () => {
     const scoreData = { score };
-    fetch(`http://127.0.0.1:5000/quiz/${randomId}`, {
+    fetch(`http://127.0.0.1:5000/job/${id}/quiz`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
