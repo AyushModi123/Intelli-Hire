@@ -42,8 +42,7 @@ const ApplicantDetails = () => {
       };
 
       const response = await axios.post(`http://127.0.0.1:5000/job/${id}/details`, data);
-
-      navigate('/upload');
+      navigate(`/upload/${id}`);
     } catch (error) {
       console.error(error);
     }
