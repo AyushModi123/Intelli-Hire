@@ -91,7 +91,7 @@ def dashboard(r_id):
     if request.method == 'GET':
         jds = []
         for x in jd_records.find({"r_id": r_id},{"jd":1, "weights":1, "job_title":1, 'status':1}):
-            del x['_id']
+            x['_id'] = str(x['_id'])
             jds.append(x) 
         return { 'data' : jds}
     
