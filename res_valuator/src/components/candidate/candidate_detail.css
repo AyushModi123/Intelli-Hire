@@ -1,5 +1,5 @@
 /* Style the form container */
-form {
+.candidate-form{
     width: 300px;
     margin: 0 auto;
   }
@@ -8,16 +8,14 @@ form {
   }
   
   /* Style the form labels */
-  label {
+  .candidate-label{
     display: block;
     margin-bottom: 5px;
     color: white;
   }
   
   /* Style the form inputs */
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"] {
+  .candidate-input{
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -27,7 +25,7 @@ form {
   }
   
   /* Style the submit button */
-  input[type="submit"] {
+  .candidate-submit {
     width: 100%;
     padding: 10px;
     background-color: #4CAF50;
@@ -38,7 +36,7 @@ form {
   }
   
   /* Hover effect on the submit button */
-  input[type="submit"]:hover {
+  .candidate-submit:hover {
     background-color: #45a049;
   }
   

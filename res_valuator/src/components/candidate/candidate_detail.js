@@ -22,7 +22,6 @@ const ApplicantDetails = () => {
         setJobTitle(response.data.job_title);
         setStatus(response.data.status);
         setjobdes(response.data.jd);
-        console.log(response.data.job_title);
       } catch (error) {
         console.error(error);
       }
@@ -52,21 +51,17 @@ const ApplicantDetails = () => {
     <div>
       <CandidateJobDescriptionCard job_desc={job_desc} jobTitle={jobTitle}/>
       <h1 style={{ color: "white", paddingTop: "60px" }}>Applicant Details</h1>
-      <div>
-        <p>Job Title: {jobTitle}</p>
-        <p>Status: {status}</p>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} required /><br /><br />
+      <form className='candidate-form' onSubmit={handleSubmit}>
+        <label className='candidate-label' htmlFor="name">Name:</label>
+        <input className='candidate-input' type="text" id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} required /><br /><br />
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required /><br /><br />
+        <label className='candidate-label'  htmlFor="email">Email:</label>
+        <input  className='candidate-input' type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required /><br /><br />
 
-        <label htmlFor="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} required /><br /><br />
+        <label className='candidate-label'  htmlFor="phone">Phone Number:</label>
+        <input  className='candidate-input' type="tel" id="phone" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} required /><br /><br />
 
-        <input type="submit" value="Submit" />
+        <input  className='candidate-submit' type="submit" value="Submit" />
       </form>
     </div>
   );
