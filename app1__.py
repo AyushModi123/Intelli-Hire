@@ -89,7 +89,8 @@ def dashboard(r_id):
     if request.method == 'GET':
         jds = []
         for x in jd_records.find({"r_id": r_id},{"jd":1, "weights":1, "job_title":1}):
-            jds.append(x)
+            del x['_id']
+            jds.append(x) 
         return jsonify(jds)
     
 @app.route('/job/<j_id>', methods=["POST", "GET"])
