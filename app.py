@@ -176,7 +176,7 @@ class app_class:
             if candidate_score>0:
                 print(candidate_score, '%\n', selection)
             result_data = {'score': self.correct_answer,'selection':selection,'candidate_score':candidate_score}
-            status = 'Reject'
+            status = 'Rejected'
             if selection:
                 status = 'Interview'
             applicant_data = {'j_id': str(j_id), 'name': self.applicant_details['name'], 'email': self.applicant_details['email'], 'phone': self.applicant_details['phone'], 'status': status, 'candidate_score':candidate_score \
