@@ -96,14 +96,18 @@ def dashboard(r_id):
         return jsonify(jds)
     
 @app.route('/job/<j_id>', methods=["POST", "GET"])
-@jwt_required(fresh=True)  
+# @jwt_required(fresh=True)  
 def job(j_id):
     if request.method == 'GET':
         job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1, "job_title":1})
-        applicant_details = applicant_records.find_one({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1, "candidate_score":1, "status":1})
+        applicant_details = []
+        for x in applicant_records.find({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1, "candidate_score":1, "status":1, 'Achievements':1,\
+                'Skills':1, "Projects":1, 'Coding Profile(s)':1, 'Education':1, 'Test Score':1, 'Experience':1}):
+            del x['_id']
+            applicant_details.append(x) 
         del job_details['_id']
-        del applicant_details['_id']
-        return jsonify(job_details | applicant_details)
+        job_details['candidates'] = applicant_details
+        return jsonify(job_details)
     
 if __name__ == "__main__":
     # serve(app, host='0.0.0.0', port=5000)
