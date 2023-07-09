@@ -58,7 +58,7 @@ const Quiz = ({ randomId }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        navigate("/result");
+        navigate(`/result/${id}`);
       })
       .catch((error) => {
         // Handle any errors that occur during the request

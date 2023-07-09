@@ -34,13 +34,13 @@ function App() {
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/dashboard/:jobId" element={<MainCandidatepage/>}/>
           <Route path="/signup" element={<Signup/>}/>
-          <Route path="/job/:id/details" element={<ApplicantDetails/>} />
+          <Route path="/job/:id" element={<ApplicantDetails/>} />
           <Route path="/upload/:id" element={<Upload randomId={randomId}/>}/>
           <Route
             path={`/quiz/${randomId}`}
             element={<Quiz randomId={randomId} />}
           />
-          <Route path="/result" element={<Result randomId={randomId} />} />
+          <Route path="/result/:id" element={<Result randomId={randomId} />} />
           <Route path="*" element={<Navigate to="/unknown-territory" />} />
           <Route path="/unknown-territory" element={<UnknownTerritory />} />
         </Routes>
