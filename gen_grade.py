@@ -72,12 +72,13 @@ class data_extraction:
         except Exception as e:  
             return e
         self.comp_dict = ast.literal_eval(response.choices[0].message.content)
-    def output_grade(self):
+    def output_grade(self):        
         self.education_grade()
         self.total_score['Experience'] = self.comp_dict['Experience']
         self.total_score['Projects'] = self.comp_dict['Projects']
         self.total_score['Skills'] = self.comp_dict['Skills']
         self.total_score['Achievements'] = self.comp_dict['Achievements']
+        print(self.total_score)
         return self.total_score
 
 

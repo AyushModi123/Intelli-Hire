@@ -119,7 +119,8 @@ class app_class:
         @app.route('/job/<j_id>/details', methods=['GET', 'POST'])
         def details(j_id):
             if request.method == 'GET':
-                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "job_title":1, "status":1})
+                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, 'weights':1, "job_title":1, "status":1})
+                # print(self.job_details)
                 del self.job_details['_id']
                 return jsonify(self.job_details)
             if request.method == 'POST':
@@ -171,7 +172,6 @@ class app_class:
                 print(links['process_error'])
             self.result['Test Score'] = self.correct_answer
             self.result['Coding Profile(s)'] = links['Coding Profile(s)']
-            print(self.result)
             selection, candidate_score = self.final_verdict(self.job_details['weights'])
             if candidate_score>0:
                 print(candidate_score, '%\n', selection)
@@ -181,6 +181,7 @@ class app_class:
                 status = 'Interview'
             applicant_data = {'j_id': str(j_id), 'name': self.applicant_details['name'], 'email': self.applicant_details['email'], 'phone': self.applicant_details['phone'], 'status': status, 'candidate_score':candidate_score \
                                ,'Achievements':self.result['Achievements'], 'Skills':self.result['Skills'], "Projects":self.result['Projects'], 'Coding Profile(s)':self.result['Coding Profile(s)'], 'Education':self.result['Education'], 'Test Score':self.result['Test Score'], 'Experience':self.result['Experience']}
+            print(applicant_data)
             applicant_records.insert_one(applicant_data)
             return jsonify(result_data)
         app.run(debug=False, port=5000)
