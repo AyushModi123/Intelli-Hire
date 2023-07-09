@@ -49,7 +49,7 @@ function Upload({ randomId }) {
 
   const handleStartAssessment = () => {
     if (resume !== null && startassessment) {
-      navigate(`/quiz/${randomId}`);
+      navigate(`/quiz/${id}`);
     } else {
       alert("Upload your resume first");
     }

@@ -37,7 +37,7 @@ function App() {
           <Route path="/job/:id" element={<ApplicantDetails/>} />
           <Route path="/upload/:id" element={<Upload randomId={randomId}/>}/>
           <Route
-            path={`/quiz/${randomId}`}
+            path={"/quiz/:id"}
             element={<Quiz randomId={randomId} />}
           />
           <Route path="/result/:id" element={<Result randomId={randomId} />} />
