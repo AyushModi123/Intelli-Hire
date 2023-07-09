@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
@@ -6,6 +6,7 @@ import "./navbar.css";
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const user = localStorage.getItem("token");
+  const[flag,setFlag]=useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,6 +14,15 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const url = window.location.href;
+  const j_id = url.split('/');
+
+  useEffect(()=>{
+  if(j_id[3]=="job")
+  {
+    setFlag(!flag);
+  }
+  },[]);
   return (
     <div className="intelli-hire__navbar">
       <div className="intelli-hire__navbar-links">
@@ -34,7 +44,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="intelli-hire__navbar-sign">
-        {user != null ? (
+        {user != null? (
           <>
             <Link to="/dashboard">
               <p>Go to Dashboard</p>
@@ -84,7 +94,7 @@ const Navbar = () => {
               </p>
             </div>
             <div className="intelli-hire__navbar-menu_container-links-sign">
-              {user != null ? (
+              {user != null&&flag==false  ? (
                 <>
                   <Link to="/dashboard">
                     <p>Go to Dashboard</p>
