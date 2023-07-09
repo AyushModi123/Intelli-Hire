@@ -8,6 +8,83 @@
     color: white;
   }
   
+  .add-new {
+    position: relative;
+    background: #444;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    letter-spacing: 0.1rem;
+    font-size: 1rem;
+    padding: 1rem 3rem;
+    transition: 0.2s;
+  }
+  
+  .add-new:hover {
+    letter-spacing: 0.2rem;
+    padding: 1.1rem 3.1rem;
+    background: var(--clr);
+    color: var(--clr);
+    cursor: pointer;
+    /* box-shadow: 0 0 35px var(--clr); */
+    animation: box 3s infinite;
+  }
+  
+  .add-new::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: #272822;
+  }
+  
+  .add-new span {
+    position: relative;
+    z-index: 1;
+  }
+  .add-new i {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  
+  .add-new i::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    left: 80%;
+    top: -2px;
+    border: 2px solid var(--clr);
+    background: #272822;
+    transition: 0.2s;
+  }
+  
+  .add-new:hover i::before {
+    width: 15px;
+    left: 20%;
+    animation: move 3s infinite;
+  }
+  
+  .add-new i::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    left: 20%;
+    bottom: -2px;
+    border: 2px solid var(--clr);
+    background: #272822;
+    transition: 0.2s;
+  }
+  
+  .add-new:hover i::after {
+    width: 15px;
+    left: 80%;
+    animation: move 3s infinite;
+  }
+  
+  
   .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -17,27 +94,26 @@
   }
   
   .card {
-    background-color: #e1f1f4;
+    background-color: #6464FB;
     border-radius: 8px;
     padding: 20px;
     width: 300px;
     text-align: center;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    color: #333;
+    color: #fff;
   }
-  
-  .card:hover {
-    background-color: #d3e8ed;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
+
   .actions {
     display: flex;
     justify-content: space-around;
     margin-top: 10px;
   }
   
+  .job-det:hover {
+    background-color: #fff;
+    cursor: pointer;
+  }
   .job-details {
     background-color: #f1f1f1;
     border-radius: 8px;

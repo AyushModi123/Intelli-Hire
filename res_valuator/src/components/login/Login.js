@@ -16,7 +16,8 @@ const Login = () => {
 		try {
 			const url = "http://127.0.0.1:5001/login";
 			const { data: res } = await axios.post(url, data);
-			localStorage.setItem("token", res);
+			localStorage.setItem("token", res[0]);
+			localStorage.setItem("r_id", res[1]);
 			window.location = "/dashboard";
 		} catch (error) {
 			if (

@@ -54,11 +54,11 @@ def signup():
         else:
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
             user_input = {'name': user, 'employer': employer, 'email': email, 'password': hashed}
-            employer_records.insert_one(user_input)
+            r_id = employer_records.insert_one(user_input).inserted_id
             # user_data = employer_records.find_one({"email": email})
             # new_email = user_data['email']
             access_token = create_access_token(identity=email, fresh=True)
-            return jsonify(access_token)
+            return jsonify(access_token, str(r_id))
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -71,16 +71,18 @@ def login():
         if email_found != None:
             email_val = email_found['email']
             passwordcheck = email_found['password']
+            r_data = employer_records.find_one({},{"_id":1 , "email": email})
+            r_id = str(r_data['_id'])
             if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
                 session["email"] = email_val
                 access_token = create_access_token(identity=email, fresh=True)            
-                return jsonify(access_token)
+                return jsonify(access_token, r_id)
         else:
             message = 'Email not found'
             return  {'message': 'This email does not exists in the database'}, 401
 
 @app.route('/dashboard/<r_id>', methods=["POST", "GET"])
-@jwt_required(fresh=True)  
+# @jwt_required(fresh=True)  
 def dashboard(r_id):
     if request.method == "POST":
         data = request.get_json()

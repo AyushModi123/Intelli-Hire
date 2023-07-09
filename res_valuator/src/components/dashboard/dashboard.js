@@ -30,6 +30,7 @@ import React, { useEffect, useState } from 'react';
 import './dashboard.css'; // Import the CSS file
 import JobDetails from './jobDetails';
 import { Link, useNavigate } from 'react-router-dom';
+import AddJobModal from './AddJobModal';
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([
@@ -55,50 +56,76 @@ const Dashboard = () => {
         { name: 'Bob Johnson', email: 'bob@example.com', phone: '2222222222', status: 'Rejected' },
       ],
     },
+    {
+      jobId: 2,
+      jobTitle: 'UI/UX Designer',
+      status: 'Inactive',
+      jobDesc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      jobUrl: 'https://example.com/job2',
+      candidates: [
+        { name: 'Alice Brown', email: 'alice@example.com', phone: '1111111111', status: 'Offer' },
+        { name: 'Bob Johnson', email: 'bob@example.com', phone: '2222222222', status: 'Rejected' },
+      ],
+    },
+    {
+      jobId: 2,
+      jobTitle: 'UI/UX Designer',
+      status: 'Inactive',
+      jobDesc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      jobUrl: 'https://example.com/job2',
+      candidates: [
+        { name: 'Alice Brown', email: 'alice@example.com', phone: '1111111111', status: 'Offer' },
+        { name: 'Bob Johnson', email: 'bob@example.com', phone: '2222222222', status: 'Rejected' },
+      ],
+    },
   ]);
 
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const r_id = localStorage.getItem("r_id");
+    fetch(`http://127.0.0.1:5001/dashboard/${r_id}`)
+      .then(response => {
+        console.log(response);
+        // Handle the response
+      })
+      .catch(error => {
+        console.error(error)
+        // Handle any errors
+      });
+  }, []);
+
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if(!token){
-  //     navigate("/login");
-  //   }
-  // },[])
-  const handleCardClick = (job) => {
-    setSelectedJob(job);
-  };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if(!token){
+      navigate("/login");
+    }
+  },[])
 
-  const handleEdit = (job) => {
-    // Handle edit action for the job
-    console.log('Edit job:', job);
+  const buttonStyle = {
+    '--clr': '#FF44CC'
   };
-
-  const handleDelete = (job) => {
-    // Handle delete action for the job
-    console.log('Delete job:', job);
-  };
-
 
   return (
     <div className="dashboard-container">
       <h2>Job Dashboard</h2>
-
+      <button className='add-new' onClick={() => setIsOpen(true)} style={buttonStyle}><span>Add New Job</span><i></i></button>
       <div className="card-container">
         {jobs.map((job) => (
-          <Link to={`/dashboard/${job.jobId}`}>
-            <div className="card" key={job.jobId} onClick={() => handleCardClick(job)}>
+            <div className="card" key={job.jobId} >
               <h3>{job.jobTitle}</h3>
               <p>Job ID: {job.jobId}</p>
               <p>Status: {job.status}</p>
-              <div className="actions">
-                <button onClick={(e) => handleDelete(job)}>Delete</button>
-              </div>
+              <Link style={{textDecoration:'none', color:'#000'}} to={`/dashboard/${job.jobId}`}>
+                <button className='job-det' style={{textDecoration:'none',fontSize:'15px',backgroundColor:'#fff',padding:'10px 30px', borderRadius:'20px', fontStyle:'bold'}}>Job Details</button>
+              </Link>
             </div>
-          </Link>
+          
         ))}
       </div>
+      <AddJobModal isOpen={isOpen} setIsOpen={setIsOpen}/>
     </div>
   );
 
