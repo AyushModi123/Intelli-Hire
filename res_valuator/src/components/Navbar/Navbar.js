@@ -23,6 +23,8 @@ const Navbar = () => {
     setFlag(!flag);
   }
   },[]);
+
+  console.log(flag);
   return (
     <div className="intelli-hire__navbar">
       <div className="intelli-hire__navbar-links">
@@ -43,6 +45,8 @@ const Navbar = () => {
           </p>
         </div>
       </div>
+      {
+        !flag ? <></>:(
       <div className="intelli-hire__navbar-sign">
         {user != null? (
           <>
@@ -64,6 +68,7 @@ const Navbar = () => {
           </>
         )}
       </div>
+        )}
       <div className="intelli-hire__navbar-menu">
         {toggleMenu ? (
           <RiCloseLine
