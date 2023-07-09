@@ -113,6 +113,11 @@
     height: 100%;
 }
 
+.gradient__bg_header{
+    background: radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgb(22 31 46) 25%);
+    position: relative;
+}
+
 @media screen and (max-width: 1050px) {
     .intelli-hire__header {
         flex-direction: column;
@@ -147,6 +152,7 @@
         font-size: 16px;
         line-height: 24px;
     }
+
 }
 
 @media screen and (max-width: 490px) {

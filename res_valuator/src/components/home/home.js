@@ -8,7 +8,7 @@ import Footer from './home-components/footer'
 const Home = () => {
   return (
     <>
-    <div className="gradient__bg">
+    <div className="gradient__bg_header">
       <Header/>
     </div>
     <AboutIntellihire/>
