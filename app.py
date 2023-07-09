@@ -119,9 +119,8 @@ class app_class:
         @app.route('/job/<j_id>/details', methods=['GET', 'POST'])
         def details(j_id):
             if request.method == 'GET':
-                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":0, "job_title":1})
-                print(self.job_details)
-                return {'message': 'DOne'}
+                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "job_title":1, "status":1})
+                return jsonify(self.job_details)
             if request.method == 'POST':
                 self.applicant_details = request.get_json()
                 return {'message': 'Details submitted successfully'}
