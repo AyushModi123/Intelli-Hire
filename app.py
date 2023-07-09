@@ -120,6 +120,7 @@ class app_class:
         def details(j_id):
             if request.method == 'GET':
                 self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "job_title":1, "status":1})
+                del self.job_details['_id']
                 return jsonify(self.job_details)
             if request.method == 'POST':
                 self.applicant_details = request.get_json()
