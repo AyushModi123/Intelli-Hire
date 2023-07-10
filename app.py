@@ -121,6 +121,8 @@ class app_class:
             if request.method == 'GET':
                 self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, 'weights':1, "job_title":1, "status":1})
                 # print(self.job_details)
+                if(self.job_details==None):
+                    return {'message': 'Invalid Job Id'}, 404
                 del self.job_details['_id']
                 return jsonify(self.job_details)
             if request.method == 'POST':
