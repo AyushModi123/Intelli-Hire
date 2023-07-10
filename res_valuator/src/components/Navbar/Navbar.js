@@ -46,7 +46,7 @@ const Navbar = () => {
         </div>
       </div>
       {
-        flag ? <></>:(
+        !flag ? <></>:(
       <div className="intelli-hire__navbar-sign">
         {user != null? (
           <>
