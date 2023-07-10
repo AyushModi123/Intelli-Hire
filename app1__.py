@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect, session,js
 from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, create_refresh_token,  get_jwt
 import bcrypt
-# from waitress import serve
+from waitress import serve
 import os
 from flask_cors import CORS
 from bson import ObjectId
@@ -110,5 +110,5 @@ def job(j_id):
         return jsonify(job_details)
     
 if __name__ == "__main__":
-    # serve(app, host='0.0.0.0', port=5000)
-    app.run(port=5001)
+    serve(app, host='0.0.0.0', port=5000)
+    # app.run(port=5001)

@@ -186,8 +186,8 @@ class app_class:
             print(applicant_data)
             applicant_records.insert_one(applicant_data)
             return jsonify(result_data)
-        app.run(debug=False, port=5000)
-        # serve(app, host='0.0.0.0', port=5000)
+        # app.run(debug=False, port=5000)
+        serve(app, host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
