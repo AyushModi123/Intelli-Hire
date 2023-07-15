@@ -4,6 +4,7 @@ This project focuses on the problem of current ATS systems which ranks the candi
 ## Demo
 Project is still in development stages, you can check it out here: https://intellihire.netlify.app/
 
+Watch the video demo here: https://www.youtube.com/watch?v=n0-fcReN0Gg
 ## Features
 Development in progress
 
