@@ -2,8 +2,9 @@
 This project focuses on the problem of current ATS systems which ranks the candidate's resume based on keywords and take weeks before employer replies back to candidate's application. We have come up with a solution to easily check the eligibility of candidate and give a verdict whether he/she is selected or not. Detailed analysis of resume is shown only to employer.
 
 ## Demo
-Project is still in development stages, you can check it out here: https://intellihire.vercel.app
+Project is still in development stages, you can check it out here: https://intellihire.netlify.app/
 
+Watch the video demo here: https://www.youtube.com/watch?v=n0-fcReN0Gg
 ## Features
 Development in progress
 
