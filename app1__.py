@@ -82,7 +82,7 @@ def login():
             return  {'message': 'This email does not exists in the database'}, 401
 
 @app.route('/dashboard/<r_id>', methods=["POST", "GET"])
-# @jwt_required(fresh=True)  
+@jwt_required(fresh=True)  
 def dashboard(r_id):
     if request.method == "POST":
         data = request.get_json()
@@ -99,7 +99,12 @@ def dashboard(r_id):
 # @jwt_required(fresh=True)  
 def job(j_id):
     if request.method == 'GET':
-        job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1, "job_title":1, 'status':1})
+        try:
+            job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, "weights":1, "job_title":1, 'status':1})
+        except Exception as e:
+            return {'message': 'Invalid Job id'}, 404
+        if job_details == None:
+            return {'message': 'Invalid Job id'}
         applicant_details = []
         for x in applicant_records.find({"j_id":str(j_id)}, {"name":1, "email":1, "phone":1, "candidate_score":1, "status":1, 'Achievements':1,\
                 'Skills':1, "Projects":1, 'Coding Profile(s)':1, 'Education':1, 'Test Score':1, 'Experience':1}):

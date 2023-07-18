@@ -119,7 +119,10 @@ class app_class:
         @app.route('/job/<j_id>', methods=['GET', 'POST'])
         def details(j_id):
             if request.method == 'GET':
-                self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, 'weights':1, "job_title":1, "status":1})
+                try:
+                    self.job_details = jd_records.find_one({"_id":ObjectId(j_id)},{"jd":1, 'weights':1, "job_title":1, "status":1})
+                except Exception as e:
+                    return {'message': 'Invalid Job id'}, 404
                 # print(self.job_details)
                 if(self.job_details==None):
                     return {'message': 'Invalid Job Id'}, 404
