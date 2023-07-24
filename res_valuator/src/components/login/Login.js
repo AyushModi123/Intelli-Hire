@@ -14,7 +14,7 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "http://127.0.0.1:5001/login";
+			const url = "https://intelli-hire-recruiter-backend.onrender.com/login";
 			const { data: res } = await axios.post(url, data);
 			localStorage.setItem("token", res[0]);
 			localStorage.setItem("r_id", res[1]);

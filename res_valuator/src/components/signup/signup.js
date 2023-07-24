@@ -21,7 +21,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://127.0.0.1:5001/signup";
+      const url = "https://intelli-hire-recruiter-backend.onrender.com/signup";
       const { data: res } = await axios.post(url, data, {
         headers: {
           "Content-Type": "application/json",

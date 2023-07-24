@@ -31,7 +31,7 @@ function Upload({ randomId }) {
       const formData = new FormData();
       formData.append("resume", resume);
 
-      fetch(`http://127.0.0.1:5000/job/${id}/upload`, {
+      fetch(`https://intelli-hire.onrender.com/job/${id}/upload`, {
         method: "POST",
         body: formData,
       })

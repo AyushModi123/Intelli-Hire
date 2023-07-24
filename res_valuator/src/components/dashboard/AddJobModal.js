@@ -45,7 +45,7 @@ const AddJobModal = ({ isOpen, setIsOpen }) => {
       r_id,
     };
     console.log(data);
-    const url = `http://127.0.0.1:5001/dashboard/${r_id}`;
+    const url = `https://intelli-hire-recruiter-backend.onrender.com/dashboard/${r_id}`;
     const res = await axios.post(url, data);
     console.log(res.status);
     if (res.status === 200) {
