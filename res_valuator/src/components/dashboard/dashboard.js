@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const r_id = localStorage.getItem("r_id");
-    fetch(`http://127.0.0.1:5001/dashboard/${r_id}`, {
+    fetch(`https://intelli-hire-recruiter-backend.onrender.com/dashboard/${r_id}`, {
       method: 'GET',
     })
       .then(response => response.json())

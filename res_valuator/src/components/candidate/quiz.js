@@ -11,7 +11,7 @@ const Quiz = ({ randomId }) => {
 
   console.log(id);
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/job/${id}/quiz`)
+    fetch(`https://intelli-hire.onrender.com/job/${id}/quiz`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data);
@@ -50,7 +50,7 @@ const Quiz = ({ randomId }) => {
 
   const handleSubmit = () => {
     const scoreData = { score };
-    fetch(`http://127.0.0.1:5000/job/${id}/quiz`, {
+    fetch(`https://intelli-hire.onrender.com/job/${id}/quiz`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

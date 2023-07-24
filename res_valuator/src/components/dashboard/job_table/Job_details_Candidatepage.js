@@ -1,36 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import JobDescriptionCard from './card'
-import BasicTable from './table'
+import React, { useEffect, useState } from "react";
+import JobDescriptionCard from "./card";
+import BasicTable from "./table";
+import { useNavigate } from "react-router-dom";
 
 const JobDetailsPage = () => {
-  const [details, setDetails] = useState('');
+  const [details, setDetails] = useState(null);
+  const [notErrFetching, setNotErrFetching] = useState(false);
+  const navigate = useNavigate();
 
   const url = window.location.href;
-  const j_id = url.split('/').pop();
+  const j_id = url.split("/").pop();
 
   useEffect(() => {
-    
-    fetch(`http://127.0.0.1:5001/job/${j_id}`, {
-      method: 'GET',
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setDetails(data)
-        // setJobs(data.data);
-        
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`https://intelli-hire-recruiter-backend.onrender.com/job/${j_id}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error("Request failed with status " + response.status);
+        }
+
+        const data = await response.json();
+        setDetails(data);
+        setNotErrFetching(true);
+      } catch (error) {
+        console.error("Error:", error);
+        navigate("/unknown-territory");
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
-    <div>
-      <JobDescriptionCard details={details} j_id={j_id}/>
-      <BasicTable details={details}/>
-    </div>
-  )
-}
+    <>
+      {notErrFetching && (
+        <div>
+          <JobDescriptionCard details={details} j_id={j_id} />
+          <BasicTable details={details} />
+        </div>
+      )}
+    </>
+  );
+};
 
 export default JobDetailsPage;
