@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './dashboard.css'; // Import the CSS file
 import { Link, useNavigate } from 'react-router-dom';
 import AddJobModal from './AddJobModal';
+import axios from 'axios';
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -11,12 +12,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     const r_id = localStorage.getItem("r_id");
-    fetch(`https://intelli-hire-recruiter-backend.onrender.com/dashboard/${r_id}`, {
-      method: 'GET',
+    const token = localStorage.getItem("token");
+    axios.get(`http://localhost:5001/dashboard/${r_id}`,{
+      headers: { 'Authorization': `Bearer ${token}` }
     })
-      .then(response => response.json())
-      .then(data => {
-        setJobs(data.data);
+      .then(res => {
+        setJobs(res?.data.data);
         
       })
       .catch(error => {
@@ -42,7 +43,7 @@ const Dashboard = () => {
       <h2>Job Dashboard</h2>
       <button className='add-new' onClick={() => setIsOpen(true)} style={buttonStyle}><span>Add New Job</span><i></i></button>
       <div className="card-container">
-        {jobs.map((job) => (
+        {jobs?.map((job) => (
             <div className="card" key={job._id} >
               <h3>{job.job_title}</h3>
               <p>Status: {job.status}</p>

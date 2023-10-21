@@ -14,10 +14,11 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "https://intelli-hire-recruiter-backend.onrender.com/login";
+			const url = "http://localhost:5001/login";
 			const { data: res } = await axios.post(url, data);
-			localStorage.setItem("token", res[0]);
-			localStorage.setItem("r_id", res[1]);
+			console.log(res);
+			localStorage.setItem("token", res.access_token);
+			localStorage.setItem("r_id", res.r_id);
 			window.location = "/dashboard";
 		} catch (error) {
 			if (
