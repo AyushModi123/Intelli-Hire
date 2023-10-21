@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import JSONResponse, Response
 from user_model import UserLogin, UserSignup, JobDetails
-from user_schema import user_insert_serializer, job_details_schema
+from user_schema import user_insert_serializer
 from pymongo import MongoClient
 import bcrypt
 from bson import ObjectId
@@ -127,8 +127,7 @@ async def get_jobs(r_id: str, current_user: str = Depends(get_current_user)):
         if current_user != rec_details["email"]:
             raise HTTPException(status_code=403, detail="You do not have permission to access this route")
         jds = []
-        job_details_dict = job_details_schema()
-        for x in jd_records.find({"r_id": r_id},job_details_dict):
+        for x in jd_records.find({"r_id": r_id}, {"jd":1, "weights":1, "job_title":1, 'status':1}):
             x['_id'] = str(x['_id'])
             jds.append(x)		
         return JSONResponse(content={'data':jds}, status_code=200)				    		
@@ -137,9 +136,8 @@ async def get_jobs(r_id: str, current_user: str = Depends(get_current_user)):
 
 @app.get('/job/{j_id}')
 async def get_job(j_id: str, current_user: str = Depends(get_current_user)):
-    try:
-        job_details_dict = job_details_schema(r_id=1)
-        job_details = jd_records.find_one({"_id": ObjectId(j_id)}, {'_id':0, **job_details_dict})		
+    try:        
+        job_details = jd_records.find_one({"_id": ObjectId(j_id)}, {'_id':0, "r_id": 1, "jd": 1, "weights": 1, "job_title": 1, "status": 1 })		
     except Exception as e:
         raise HTTPException(status_code=404, detail="Invalid Job id")    
     if job_details is None:
